@@ -3,17 +3,19 @@ import { icona } from "../ui/icone.js";
 import { testata, vuoto } from "./comuni.js";
 
 export const titolo = "Outfit";
+export const conTabbar = true;
 
 export function render(s, { avviso = "" } = {}) {
   let corpo = "";
-  if (s.numCapi === 0) {
+  const n = s.capi?.length;
+  if (n === 0) {
     corpo = vuoto({
       icona: "layers",
       titolo: "Nessun outfit",
       testo: "Prima aggiungi qualche capo all'armadio, poi qui li combini.",
       azione: html`<a class="btn" href="#/armadio">Vai all'armadio</a>`,
     });
-  } else if (s.numCapi > 0) {
+  } else if (n > 0) {
     corpo = vuoto({
       icona: "layers",
       titolo: "Nessun outfit",

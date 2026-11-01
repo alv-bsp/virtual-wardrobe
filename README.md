@@ -114,7 +114,7 @@ rompere i capi che la usano: `attiva = false`. Lo `slug` non va cambiato dopo av
 ## Tappe
 
 - [x] 1. Scaffold, login, deploy
-- [ ] 2. Capi con foto
+- [x] 2. Capi con foto: griglia con filtri e ricerca, aggiunta da fotocamera o galleria, scheda, modifica, eliminazione
 - [ ] 3. Outfit
 - [ ] 4. Cosa manca
 - [ ] 5. Rifinitura UI e installazione su Home
