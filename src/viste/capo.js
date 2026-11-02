@@ -1,11 +1,11 @@
 import { html } from "../ui/html.js";
 import { icona } from "../ui/icone.js";
-import { trovaCapo } from "../stato.js";
+import { trovaCapo, outfitDiCapo, capiDiOutfit } from "../stato.js";
 import { nomeVoce, nomeCapo } from "../voci.js";
 import { eliminaCapo } from "../dati.js";
 import { sostituisci } from "../router.js";
 import { apriFoglio, chiudiFoglio, toast } from "../ui/avvisi.js";
-import { barra, vuoto, foto, pallino } from "./comuni.js";
+import { barra, vuoto, foto, pallino, collage, nomeOutfit, descriviOutfit } from "./comuni.js";
 
 export const conTabbar = true;
 export const fab = () => "";
@@ -24,6 +24,7 @@ export function render(s, { rotta, avviso = "" }) {
     })}`;
   }
 
+  const inOutfit = outfitDiCapo(c.id);
   return html`
     ${barra({
       indietro: "Armadio",
@@ -47,17 +48,31 @@ export function render(s, { rotta, avviso = "" }) {
       </dl>
       <section class="sezione">
         <h2>Outfit</h2>
-        <p class="nota">Non compare ancora in nessun outfit.</p>
+        ${inOutfit.length
+          ? html`<ul class="lista-outfit">${inOutfit.map((o) => html`
+              <li>
+                <a class="riga-outfit" href="#/outfit/${o.id}">
+                  ${collage(capiDiOutfit(o.id), "piccolo")}
+                  <span><span class="riga-nome">${nomeOutfit(o, capiDiOutfit(o.id))}</span>
+                  ${descriviOutfit(o) ? html`<span class="riga-meta">${descriviOutfit(o)}</span>` : ""}</span>
+                  ${icona("chevron-right", 18)}
+                </a>
+              </li>`)}</ul>`
+          : html`<p class="nota">Non compare ancora in nessun outfit.</p>`}
+        ${c.stato !== "wishlist" ? html`
+          <button class="btn largo" type="button" data-azione="componi-con" data-id="${c.id}">${icona("shuffle", 18)}Crea un outfit con questo capo</button>` : ""}
       </section>
       <button class="btn largo" type="button" data-azione="elimina-capo" data-id="${c.id}">${icona("trash", 18)}Elimina capo</button>
     </article>`;
 }
 
 function conferma(c) {
+  const n = outfitDiCapo(c.id).length;
+  const outfit = n ? (n === 1 ? " e dall'outfit in cui compare" : ` e dai ${n} outfit in cui compare`) : "";
   return html`
     <div class="maniglia" aria-hidden="true"></div>
     <div class="foglio-testa"><h2 id="foglio-titolo">Eliminare questo capo?</h2></div>
-    <p class="foglio-testo">«${nomeCapo(c)}» sparisce dall'armadio e dagli outfit, insieme alla sua foto. Non si può annullare.</p>
+    <p class="foglio-testo">«${nomeCapo(c)}» sparisce dall'armadio${outfit}, insieme alla sua foto. Non si può annullare.</p>
     <div class="foglio-azioni">
       <button class="btn" type="button" data-azione="chiudi-foglio">Annulla</button>
       <button class="btn" type="button" data-azione="conferma-elimina" data-id="${c.id}">${icona("trash", 18)}Elimina capo</button>

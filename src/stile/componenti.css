@@ -527,3 +527,106 @@ details.gruppo[open] summary::before { content: "−"; }
   font-weight: 600;
   line-height: 16px;
 }
+
+/* ───────── Outfit: compositore ───────── */
+.compositore { display: grid; gap: var(--s5); }
+.genera .btn { min-height: 52px; }
+.genera .btn svg { color: var(--accent); }
+.genera .aiuto { margin: var(--s3) 0 0; text-align: center; }
+.slot-lista { list-style: none; border-top: 1px solid var(--line); }
+.slot {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.slot-scelta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  min-height: 72px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+}
+.slot-scelta .foto { flex: none; width: 56px; border-radius: 10px; }
+.slot-scelta > svg:last-child { color: var(--ink-2); }
+.foto.vuoto-slot { display: grid; place-items: center; background: var(--base); box-shadow: var(--in1); color: var(--ink-2); }
+.slot-testo { flex: 1; min-width: 0; display: grid; }
+.slot-nome { color: var(--ink-2); font-size: var(--t-xs); font-weight: 550; }
+.slot-capo { overflow: hidden; font-weight: 550; white-space: nowrap; text-overflow: ellipsis; }
+.icona-btn.blocco[aria-pressed="true"] { box-shadow: var(--in1); color: var(--accent-text); }
+.blocco-posto { flex: none; width: var(--touch); }
+.etichetta { margin-bottom: var(--s2); font-size: var(--t-sm); font-weight: 650; }
+.etichetta.separata { margin-top: var(--s5); }
+[data-azione="preferito"][aria-pressed="true"] svg,
+[data-azione="preferito-bozza"][aria-pressed="true"] svg { fill: currentColor; }
+.scelta-capo { width: 100%; padding: 0; border: 0; background: none; color: inherit; text-align: left; }
+.scelta-capo[aria-pressed="true"] .foto { outline: 3px solid var(--accent); outline-offset: 2px; }
+.scelta-capo[aria-pressed="true"] .tessera-nome { color: var(--accent-text); font-weight: 650; }
+
+/* ───────── Outfit: elenco, collage, dettaglio ───────── */
+.griglia-outfit {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 12px;
+}
+@media (min-width: 560px) { .griglia-outfit { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.tessera-outfit { display: block; color: inherit; text-decoration: none; }
+.tessera-outfit:active .collage { opacity: .85; }
+.collage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 3px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 14px;
+}
+.collage .foto { height: 100%; aspect-ratio: auto; border-radius: 0; }
+.collage .vuoto-collage { background: var(--photo-bg); }
+.collage.piccolo { flex: none; width: 56px; gap: 2px; border-radius: 10px; }
+.collage.piccolo .foto.senza svg { display: none; }
+.tessera-meta {
+  display: block;
+  overflow: hidden;
+  color: var(--ink-2);
+  font-size: var(--t-xs);
+  line-height: 18px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.tessera-outfit .tessera-nome { font-size: var(--t-sm); line-height: 20px; }
+.cuore { display: inline-flex; margin-right: 4px; vertical-align: -1px; color: var(--accent); }
+.cuore svg { fill: currentColor; }
+.griglia-capi-outfit {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 10px;
+  margin-bottom: var(--s4);
+}
+.griglia-capi-outfit .tessera-meta { padding-top: 6px; }
+.griglia-capi-outfit .tessera-nome { padding-top: 0; }
+.azioni-riga { margin: var(--s3) 0 var(--s4); }
+.note-outfit { margin-bottom: var(--s5); white-space: pre-wrap; }
+.lista-outfit { list-style: none; margin: var(--s2) 0 var(--s4); border-top: 1px solid var(--line); }
+.riga-outfit {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
+}
+.riga-outfit > span { flex: 1; min-width: 0; display: grid; }
+.riga-outfit > svg { color: var(--ink-2); }
+.riga-nome { overflow: hidden; font-weight: 550; white-space: nowrap; text-overflow: ellipsis; }
+.riga-meta { color: var(--ink-2); font-size: var(--t-xs); }

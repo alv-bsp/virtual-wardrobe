@@ -111,12 +111,18 @@ rompere i capi che la usano: `attiva = false`. Per toglierla del tutto, anche da
 - **Niente colore d'errore separato**: l'accento è già corallo; le azioni distruttive sono pulsanti neutri con
   conferma.
 - **Dati in memoria**: dopo il login si carica tutto; filtri, ricerca e Cosa manca girano nel browser.
+- **Generatore di outfit a regole, non AI** (`src/outfit.js`). Un capo per strato: giacca, maglia, sopra, sotto,
+  scarpe, accessori; lo strato si ricava dalla categoria. Sopra, sotto e scarpe ci sono sempre; giacca e maglia
+  dipendono dalla stagione più fredda scelta (sempre in inverno, mai in estate, a volte nelle mezze stagioni);
+  gli accessori li aggiungi tu. Usa solo capi nell'armadio, adatti a stagione e occasione (un capo senza stagioni
+  o occasioni va bene sempre). Colori: i neutri stanno con tutto, al massimo un colore acceso per outfit.
+  I capi usati in meno outfit escono più spesso, e non ripropone combinazioni già viste o salvate.
 
 ## Tappe
 
 - [x] 1. Scaffold, login, deploy
 - [x] 2. Capi con foto: griglia con filtri e ricerca, aggiunta da fotocamera o galleria, scheda, modifica, eliminazione
-- [ ] 3. Outfit
+- [x] 3. Outfit: compositore con Genera, blocchi e scelta per strato, elenco con preferiti, outfit nella scheda del capo
 - [ ] 4. Cosa manca
 - [ ] 5. Rifinitura UI e installazione su Home
 

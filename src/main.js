@@ -18,6 +18,8 @@ import * as outfit from "./viste/outfit.js";
 import * as manca from "./viste/manca.js";
 import * as capo from "./viste/capo.js";
 import * as editor from "./viste/editor.js";
+import * as compositore from "./viste/compositore.js";
+import * as outfitDettaglio from "./viste/outfit-dettaglio.js";
 import * as filtri from "./viste/filtri.js";
 import * as accesso from "./viste/accesso.js";
 import * as account from "./viste/account.js";
@@ -33,10 +35,11 @@ const sceltaFoto = document.getElementById("scegli-foto");
 function vistaPer(r) {
   if (r.nome === "nuovo") return editor;
   if (r.nome === "capo") return r.param[1] === "modifica" ? editor : capo;
+  if (r.nome === "outfit" && r.param[0]) {
+    return r.param[0] === "nuovo" || r.param[1] === "modifica" ? compositore : outfitDettaglio;
+  }
   return { armadio, outfit, manca }[r.nome];
 }
-
-const inEditor = (r) => vistaPer(r) === editor;
 
 // ───────────────────────────────────────── disegno
 function guscio() {
@@ -100,7 +103,6 @@ function disegna() {
 }
 
 // ───────────────────────────────────────── azioni
-const prossimamente = () => toast("Questa parte arriva nella prossima versione.");
 let modoFoto = "nuovo";
 
 const AZIONI = {
@@ -108,9 +110,13 @@ const AZIONI = {
   ...filtri.azioni,
   ...editor.azioni,
   ...capo.azioni,
+  ...outfit.azioni,
+  ...outfitDettaglio.azioni,
+  ...compositore.azioni,
   "aggiungi-capo": () => { modoFoto = "nuovo"; sceltaFoto.click(); },
   "scegli-foto": () => { modoFoto = "cambia"; sceltaFoto.click(); },
-  "nuovo-outfit": prossimamente,
+  "nuovo-outfit": () => { compositore.nuovoOutfit(); vai("outfit/nuovo"); },
+  "componi-con": (el) => { compositore.componiCon(el.dataset.id); vai("outfit/nuovo"); },
   account: () => apriFoglio(account.render(stato)),
   "chiudi-foglio": chiudiFoglio,
   riprova: () => caricaTutto(),
@@ -120,7 +126,7 @@ const AZIONI = {
   },
 };
 
-const INPUT = { ...armadio.input, ...editor.input };
+const INPUT = { ...armadio.input, ...editor.input, ...compositore.input };
 
 document.addEventListener("click", (e) => {
   const el = e.target.closest("[data-azione]");
@@ -156,10 +162,10 @@ let rottaPrecedente = rotta();
 window.addEventListener("hashchange", () => {
   normalizza();
   const r = rotta();
-  // Uscendo dal form senza salvare la bozza si butta: rientrando si riparte dal capo com'è.
-  if (inEditor(rottaPrecedente) && (!inEditor(r) || r.param[0] !== rottaPrecedente.param[0] || r.nome !== rottaPrecedente.nome)) {
-    editor.abbandona();
-  }
+  // Uscendo da un form senza salvare la bozza si butta: rientrando si riparte da com'era.
+  const prima = vistaPer(rottaPrecedente);
+  const stessaPagina = prima === vistaPer(r) && r.nome === rottaPrecedente.nome && r.param.join("/") === rottaPrecedente.param.join("/");
+  if (prima.abbandona && !stessaPagina) prima.abbandona();
   rottaPrecedente = r;
   chiudiFoglio();
   disegna();

@@ -2,6 +2,7 @@
 //   #/armadio · #/outfit · #/manca          le tre sezioni della tab bar
 //   #/nuovo                                 aggiunta di un capo
 //   #/capo/<id> · #/capo/<id>/modifica      scheda e modifica di un capo
+//   #/outfit/nuovo · #/outfit/<id> · #/outfit/<id>/modifica
 export const SEZIONI = ["armadio", "outfit", "manca"];
 const PAGINE = [...SEZIONI, "nuovo", "capo"];
 

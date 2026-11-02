@@ -1,7 +1,8 @@
 import { html } from "../ui/html.js";
 import { icona } from "../ui/icone.js";
-import { hexColore, nomeVoce } from "../voci.js";
+import { hexColore, nomeVoce, nomeCapo } from "../voci.js";
 import { urlInCache } from "../foto.js";
+import { SLOT, slotDi } from "../outfit.js";
 
 /** Titolo della sezione con il pulsante Account a destra. */
 export function testata(titolo, sotto = "") {
@@ -63,3 +64,36 @@ export function foto(percorso, { classe = "", alt = "" } = {}) {
 }
 
 export const etichettaStato = (s) => (s === "armadio" ? "" : nomeVoce("stato", s));
+
+// ───────────────────────────── outfit
+const PRIORITA_COLLAGE = ["sotto", "scarpe", "giacca", "accessori"];
+
+/** Capi dell'outfit in ordine di strato, dall'alto in basso. */
+export function inOrdine(capi) {
+  const pos = (c) => SLOT.findIndex((s) => s.id === slotDi(c));
+  return [...capi].sort((a, b) => pos(a) - pos(b));
+}
+
+/** Fino a quattro miniature: un capo sopra (maglia o sopra), sotto, scarpe, poi giacca e il resto. */
+export function collage(capi, classe = "") {
+  const perSlot = (id) => capi.filter((c) => slotDi(c) === id);
+  const sopra = [...perSlot("maglia"), ...perSlot("sopra")];
+  const ordinati = [sopra[0], ...PRIORITA_COLLAGE.flatMap(perSlot), ...sopra.slice(1)].filter(Boolean);
+  const quattro = ordinati.slice(0, 4);
+  return html`
+    <div class="collage ${classe}" aria-hidden="true">
+      ${[0, 1, 2, 3].map((i) => (quattro[i] ? foto(quattro[i].miniatura) : html`<div class="foto vuoto-collage"></div>`))}
+    </div>`;
+}
+
+/** Nome dell'outfit, o i nomi dei primi due capi se non ne ha uno. */
+export function nomeOutfit(o, capi) {
+  if (o.nome?.trim()) return o.nome.trim();
+  const ordinati = inOrdine(capi);
+  return ordinati.length ? ordinati.slice(0, 2).map(nomeCapo).join(" + ") : "Outfit senza capi";
+}
+
+export function descriviOutfit(o) {
+  const parti = [o.stagioni.map((s) => nomeVoce("stagione", s)).join(", "), o.occasioni.map((s) => nomeVoce("occasione", s)).join(", ")];
+  return parti.filter(Boolean).join(" · ");
+}
