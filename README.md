@@ -35,7 +35,7 @@ Un solo utente, pensata per il telefono e installabile sulla schermata Home.
     dall'icona. Il login resta salvato sul telefono.
 
 Dopo il login, il pulsante Account in alto a destra mostra quante voci delle liste sono state lette:
-se sono 38, schema, permessi e liste sono a posto.
+se sono 37, schema, permessi e liste sono a posto.
 
 ## Sviluppo in locale
 
@@ -96,7 +96,8 @@ supabase/voci.sql        categorie, colori, stagioni, occasioni (si può riesegu
 
 Categorie, colori, stagioni e occasioni stanno nella tabella `voci`. Si cambiano modificando `supabase/voci.sql`
 e rieseguendolo, oppure dal Table Editor di Supabase. Rinominare = cambiare `nome`. Per togliere una voce senza
-rompere i capi che la usano: `attiva = false`. Lo `slug` non va cambiato dopo averlo usato.
+rompere i capi che la usano: `attiva = false`. Per toglierla del tutto, anche dai capi che la usano, serve un file in
+`supabase/modifiche/` da eseguire una volta (esempio: `2026-11-03-togli-lavoro.sql`). Lo `slug` non va cambiato dopo averlo usato.
 
 ## Decisioni
 

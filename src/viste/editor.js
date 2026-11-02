@@ -118,12 +118,20 @@ export function render(s, { rotta }) {
       </section>
 
       ${gruppoUno("Categoria", "categoria", voci("categoria", { scelte: [b.categoria] }))}
-      ${gruppoUno("Colore", "colore", voci("colore", { scelte: [b.colore] }), true)}
 
-      <details class="gruppo" ${b.colori_secondari.length ? "open" : ""}>
-        <summary>Altri colori${b.colori_secondari.length ? ` (${b.colori_secondari.length})` : ""}</summary>
-        ${chipMolti("colori_secondari", voci("colore", { scelte: b.colori_secondari }).filter((v) => v.slug !== b.colore), true)}
-      </details>
+      <fieldset class="gruppo" id="gruppo-colore">
+        <legend>Colori</legend>
+        <p class="aiuto">Puoi sceglierne più di uno: il primo è il principale.</p>
+        <div class="chips">
+          ${voci("colore", { scelte: colori(b) }).map((v) => {
+            const i = colori(b).indexOf(v.slug);
+            return html`
+              <button class="chip" type="button" data-azione="colore" data-valore="${v.slug}" aria-pressed="${i >= 0}">
+                ${i >= 0 ? icona("check", 15, 2.6) : ""}${pallino(v.slug)}${v.nome}${i === 0 && colori(b).length > 1 ? html`<span class="principale">principale</span>` : ""}
+              </button>`;
+          })}
+        </div>
+      </fieldset>
 
       <fieldset class="gruppo">
         <legend>Stagioni</legend>
@@ -198,6 +206,9 @@ function gruppoUno(titolo, campo, elenco, conPallino = false) {
     </fieldset>`;
 }
 
+/** Colori nell'ordine in cui li hai scelti: il primo è il principale (colonna colore), gli altri i secondari. */
+const colori = (b) => [b.colore, ...b.colori_secondari].filter(Boolean);
+
 const chipMolti = (campo, elenco, conPallino = false) => html`
   <div class="chips">${elenco.map((v) => chip("molti", campo, v, bozza[campo].includes(v.slug), conPallino))}</div>`;
 
@@ -207,7 +218,7 @@ async function salva() {
   if (!b || b.salvataggio || b.inPreparazione) return;
   const manca = !b.categoria ? "categoria" : !b.colore ? "colore" : null;
   if (manca) {
-    toast(manca === "categoria" ? "Scegli una categoria." : "Scegli un colore.");
+    toast(manca === "categoria" ? "Scegli una categoria." : "Scegli almeno un colore.");
     document.getElementById(`gruppo-${manca}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
@@ -232,7 +243,12 @@ export const azioni = {
     const { campo, valore, tipo } = el.dataset;
     if (tipo === "uno") bozza[campo] = valore;
     else bozza[campo] = alterna(bozza[campo], valore);
-    if (campo === "colore") bozza.colori_secondari = bozza.colori_secondari.filter((c) => c !== valore);
+    aggiorna({});
+  },
+  colore: (el) => {
+    const scelti = alterna(colori(bozza), el.dataset.valore);
+    bozza.colore = scelti[0] || null;
+    bozza.colori_secondari = scelti.slice(1);
     aggiorna({});
   },
   "tutto-anno": () => {

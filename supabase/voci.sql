@@ -1,6 +1,7 @@
 -- Armadio · liste predefinite
 -- Si può rieseguire: aggiorna nomi, ordine e colori senza duplicare.
 -- Per togliere una voce senza rompere i capi che la usano: attiva = false.
+-- Questo file non cancella voci: le voci tolte del tutto sono in supabase/modifiche/.
 
 insert into public.voci (lista, slug, nome, ordine, hex) values
   ('categoria', 'giacche',      'Giacche e cappotti', 1,  null),
@@ -40,9 +41,8 @@ insert into public.voci (lista, slug, nome, ordine, hex) values
   ('stagione', 'inverno',   'Inverno',   4, null),
 
   ('occasione', 'tempo-libero', 'Tempo libero', 1, null),
-  ('occasione', 'lavoro',       'Lavoro',       2, null),
-  ('occasione', 'elegante',     'Elegante',     3, null),
-  ('occasione', 'sport',        'Sport',        4, null),
-  ('occasione', 'casa',         'Casa',         5, null)
+  ('occasione', 'elegante',     'Elegante',     2, null),
+  ('occasione', 'sport',        'Sport',        3, null),
+  ('occasione', 'casa',         'Casa',         4, null)
 on conflict (lista, slug) do update
   set nome = excluded.nome, ordine = excluded.ordine, hex = excluded.hex;
