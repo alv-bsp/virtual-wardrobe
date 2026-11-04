@@ -10,7 +10,6 @@ import { barra, vuoto, foto, inOrdine, nomeOutfit, descriviOutfit } from "./comu
 
 export const titolo = "Outfit";
 export const conTabbar = true;
-export const fab = () => "";
 
 const nomeSlot = (c) => SLOT.find((s) => s.id === slotDi(c))?.nome || "";
 

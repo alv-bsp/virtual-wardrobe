@@ -20,4 +20,3 @@ export function render(s, { avviso = "" } = {}) {
   return html`${testata(titolo)}${avviso}${corpo}`;
 }
 
-export const fab = () => "";

@@ -5,7 +5,7 @@
   padding:
     calc(env(safe-area-inset-top) + var(--s3))
     max(var(--gutter), env(safe-area-inset-right))
-    calc(var(--tabbar-bottom) + var(--tabbar-h) + 104px)
+    calc(var(--barra-h) + env(safe-area-inset-bottom) + var(--s5))
     max(var(--gutter), env(safe-area-inset-left));
 }
 
@@ -52,9 +52,9 @@
 .btn.primario {
   background: var(--accent);
   color: var(--on-accent);
-  box-shadow: var(--e2), inset 1px 1px 1px rgba(255, 255, 255, .22);
+  box-shadow: var(--corallo-su);
 }
-.btn.primario:active { box-shadow: inset 2px 2px 5px rgba(0, 0, 0, .2); }
+.btn.primario:active { box-shadow: var(--corallo-giu); }
 .btn.largo { width: 100%; }
 .btn[disabled], .btn[aria-busy="true"] { opacity: .6; cursor: default; }
 
@@ -124,52 +124,59 @@
 }
 .campo input::placeholder { color: var(--ink-2); }
 
-/* ───────── Tab bar e azione principale ───────── */
+/* ───────── Barra in basso: agganciata al fondo, taglio netto in alto ───────── */
+/* Fondo pieno e un filo in alto: i contenuti finiscono contro un bordo, senza aloni né sfumature.
+   Dentro, tasti fisici: la sezione attiva resta premuta, il tasto corallo è l'azione principale. */
 .tabbar {
   position: fixed;
   z-index: 20;
-  left: max(var(--gutter), env(safe-area-inset-left));
-  right: max(var(--gutter), env(safe-area-inset-right));
-  bottom: var(--tabbar-bottom);
-  max-width: 520px;
-  margin: 0 auto;
-  height: var(--tabbar-h);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  padding: 6px;
-  border-radius: var(--r-lg);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding:
+    var(--barra-pad) max(var(--gutter), env(safe-area-inset-right))
+    calc(var(--barra-pad) + max(4px, env(safe-area-inset-bottom))) max(var(--gutter), env(safe-area-inset-left));
   background: var(--base);
-  box-shadow: var(--e2);
+  border-top: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--sh-light);
 }
-.tab {
+.tabbar-tasti {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.1fr);
+  gap: 10px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.tab, .tasto-cta {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
-  border-radius: 20px;
-  color: var(--ink-2);
+  height: var(--tasto-h);
+  border: 0;
+  border-radius: 16px;
   font-size: 12px;
   font-weight: 550;
+  letter-spacing: -.005em;
   text-decoration: none;
-  transition: box-shadow var(--dur) var(--ease);
+}
+.tab {
+  background: var(--base);
+  color: var(--ink-2);
+  box-shadow: var(--e1);
 }
 .tab[aria-current="page"] {
-  box-shadow: var(--in1);
+  box-shadow: var(--in2);
   color: var(--accent-text);
   font-weight: 600;
 }
 .tab[aria-current="page"] svg { color: var(--accent); }
-
-.fab {
-  position: fixed;
-  z-index: 21;
-  right: max(var(--gutter), calc((100vw - 720px) / 2 + var(--gutter)), env(safe-area-inset-right));
-  bottom: calc(var(--tabbar-bottom) + var(--tabbar-h) + var(--s4));
-  height: 56px;
-  padding: 0 22px 0 18px;
-  box-shadow: var(--e3), inset 1px 1px 1px rgba(255, 255, 255, .22);
+.tasto-cta {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 650;
+  box-shadow: var(--corallo-su);
 }
 
 /* ───────── Stati vuoti e avvisi ───────── */
@@ -269,7 +276,7 @@
   position: fixed;
   z-index: 50;
   left: 50%;
-  bottom: calc(var(--tabbar-bottom) + var(--tabbar-h) + 88px);
+  bottom: calc(var(--barra-h) + max(4px, env(safe-area-inset-bottom)) + var(--s4));
   width: max-content;
   max-width: calc(100vw - 2 * var(--gutter));
   padding: 12px 18px;
@@ -438,7 +445,7 @@
 .sezione .nota { padding: var(--s2) 0 0; }
 
 /* ───────── Editor del capo ───────── */
-.vista.senza-tabbar { padding-bottom: calc(env(safe-area-inset-bottom) + 112px); }
+.vista.senza-tabbar { padding-bottom: calc(var(--barra-h) + env(safe-area-inset-bottom) + var(--s5)); }
 .editor { display: grid; gap: var(--s5); }
 .editor-foto { display: grid; justify-items: center; gap: var(--s3); }
 .editor-foto .foto.grande { width: min(62vw, 260px); }
@@ -488,10 +495,14 @@ details.gruppo[open] summary::before { content: "−"; }
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0 max(var(--gutter), env(safe-area-inset-right)) calc(max(12px, env(safe-area-inset-bottom)) + 4px) max(var(--gutter), env(safe-area-inset-left));
-  pointer-events: none; /* il pulsante galleggia sui contenuti, senza sfumature dietro */
+  padding:
+    var(--barra-pad) max(var(--gutter), env(safe-area-inset-right))
+    calc(var(--barra-pad) + max(4px, env(safe-area-inset-bottom))) max(var(--gutter), env(safe-area-inset-left));
+  background: var(--base);
+  border-top: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--sh-light);
 }
-.barra-salva .btn { display: flex; max-width: 688px; margin: 0 auto; pointer-events: auto; }
+.barra-salva .btn { display: flex; max-width: 688px; height: var(--tasto-h); margin: 0 auto; box-shadow: var(--corallo-su); }
 
 /* ───────── Fogli: gruppi e azioni ───────── */
 .foglio .gruppo { margin-bottom: var(--s5); }

@@ -10,7 +10,6 @@ import { toast } from "../ui/avvisi.js";
 import { barra, vuoto, pallino } from "./comuni.js";
 
 export const conTabbar = false;
-export const fab = () => "";
 
 // La bozza vive qui finché non la salvi o annulli. I campi di testo la aggiornano senza ridisegnare.
 let bozza = null;

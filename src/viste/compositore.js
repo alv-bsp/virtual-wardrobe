@@ -10,7 +10,6 @@ import { apriFoglio, chiudiFoglio, toast } from "../ui/avvisi.js";
 import { barra, vuoto, foto, nomeOutfit } from "./comuni.js";
 
 export const conTabbar = false;
-export const fab = () => "";
 
 // La bozza dell'outfit vive qui finché non la salvi o esci.
 let bozza = null;

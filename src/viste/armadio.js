@@ -94,11 +94,6 @@ function nessunRisultato(s) {
   });
 }
 
-// L'azione principale galleggia solo quando c'è già qualcosa: con l'armadio vuoto la porta lo stato vuoto.
-export function fab(s) {
-  if (!s.capi?.length) return "";
-  return html`<button class="btn primario fab" type="button" data-key="fab" data-azione="aggiungi-capo">${icona("plus")}Aggiungi capo</button>`;
-}
 
 const cambiaFiltri = (modifiche) => aggiorna({ filtri: { ...stato.filtri, ...modifiche } });
 

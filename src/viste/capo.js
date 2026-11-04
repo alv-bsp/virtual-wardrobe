@@ -8,7 +8,6 @@ import { apriFoglio, chiudiFoglio, toast } from "../ui/avvisi.js";
 import { barra, vuoto, foto, pallino, collage, nomeOutfit, descriviOutfit } from "./comuni.js";
 
 export const conTabbar = true;
-export const fab = () => "";
 
 const data = (iso) => new Date(iso).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
 const elenco = (lista, slugs) => slugs.length ? slugs.map((s) => nomeVoce(lista, s)).join(", ") : "—";

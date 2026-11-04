@@ -9,11 +9,11 @@
   --dur-premi: 90ms;
   --dur-rilascio: 420ms;
   --dur-stato: 260ms;
-  --in-premuto: inset 2.5px 2.5px 6px var(--sh-dark), inset -2.5px -2.5px 6px var(--sh-light);
+  --in-premuto: var(--nulla), var(--nulla), inset 2.5px 2.5px 6px var(--sh-dark), inset -2.5px -2.5px 6px var(--sh-light);
 }
 
 /* ───────── Pressione ───────── */
-.btn, .chip, .icona-btn, .tab, .link, .indietro, .foto.vuota {
+.btn, .chip, .icona-btn, .link, .indietro, .foto.vuota {
   transition:
     box-shadow var(--dur-stato) var(--ease),
     transform var(--dur-rilascio) var(--molla),
@@ -23,18 +23,14 @@
   user-select: none;
   touch-action: manipulation;
 }
-:is(.btn, .chip, .icona-btn, .tab, .link, .indietro, .foto.vuota)[data-js-premuto] {
+:is(.btn, .chip, .icona-btn, .link, .indietro, .foto.vuota)[data-js-premuto] {
   transition-duration: var(--dur-premi);
   transition-timing-function: ease-out;
 }
 .btn[data-js-premuto] { transform: scale(.965); box-shadow: var(--in-premuto); }
-.btn.primario[data-js-premuto] {
-  transform: scale(.97);
-  box-shadow: inset 2px 2px 6px rgba(0, 0, 0, .24), inset -1px -1px 2px rgba(255, 255, 255, .14);
-}
+.btn.primario[data-js-premuto] { transform: scale(.97); box-shadow: var(--corallo-giu); }
 .chip[data-js-premuto] { transform: scale(.95); box-shadow: var(--in-premuto); }
 .icona-btn[data-js-premuto] { transform: scale(.9); box-shadow: var(--in-premuto); }
-.tab[data-js-premuto] { transform: scale(.92); }
 .foto.vuota[data-js-premuto] { transform: scale(.97); }
 :is(.link, .indietro)[data-js-premuto] { opacity: .55; }
 
@@ -51,7 +47,7 @@
 /* Campi: si incassano un po' di più quando ci scrivi */
 .cerca, .campo input, .campo textarea { transition: box-shadow var(--dur-stato) var(--ease); }
 .cerca:focus-within, .campo input:focus, .campo textarea:focus {
-  box-shadow: inset 3.5px 3.5px 8px var(--sh-dark), inset -3.5px -3.5px 8px var(--sh-light);
+  box-shadow: var(--in3);
 }
 
 /* In attesa (Salvo…, Accesso in corso…) il pulsante respira */
@@ -74,29 +70,19 @@
 /* Il contatore dei filtri salta quando cambia */
 .chip .conteggio { animation: pop .34s var(--molla) both; }
 
-/* ───────── Tab bar: l'incasso scorre da una tab all'altra ───────── */
-.tab { position: relative; z-index: 1; }
-.tab[aria-current="page"] { box-shadow: none; }
-.tab-indicatore {
-  position: absolute;
-  top: 6px;
-  bottom: 6px;
-  left: 6px;
-  width: calc((100% - 24px) / 3);
-  border-radius: 20px;
-  box-shadow: var(--in1);
-  transform: translateX(calc(var(--i, 0) * (100% + 6px)));
-  transition: transform .46s var(--molla);
-  pointer-events: none;
+/* ───────── Barra in basso: tasti fisici ───────── */
+/* Toccando una sezione il suo tasto scende e resta giù, quello di prima torna su. Niente che scorre. */
+.tab, .tasto-cta {
+  transition: box-shadow .22s var(--ease), color .22s var(--ease), background-color .22s var(--ease);
 }
-.tab svg { transition: transform var(--dur-rilascio) var(--molla), color var(--dur-stato) var(--ease); }
-.tab[aria-current="page"] svg { transform: translateY(-1px) scale(1.06); }
+.tab svg, .tab span, .tasto-cta svg, .tasto-cta span { transition: transform .22s var(--ease); }
+.tab[aria-current="page"] svg, .tab[aria-current="page"] span { transform: translateY(1px); }
+.tab[data-js-premuto] { box-shadow: var(--in2); transform: none; transition-duration: var(--dur-premi); }
+.tab[data-js-premuto] svg, .tab[data-js-premuto] span { transform: translateY(1px); }
+.tasto-cta[data-js-premuto] { box-shadow: var(--corallo-giu); transition-duration: var(--dur-premi); }
+.tasto-cta[data-js-premuto] svg, .tasto-cta[data-js-premuto] span { transform: translateY(1px); }
 
 /* ───────── Ingressi ───────── */
-/* Il pulsante principale arriva dal basso */
-.fab { animation: entra-fab .5s var(--molla) both; }
-@keyframes entra-fab { from { transform: translateY(24px) scale(.8); opacity: 0; } }
-
 /* Capi e outfit che compaiono dopo un filtro o una ricerca; gli slot cambiati da Genera */
 #vista[data-js-montato] :is(.griglia, .griglia-outfit) > li { animation: entra-tessera .34s var(--morbido) both; animation-delay: calc(var(--n, 0) * 22ms); }
 @keyframes entra-tessera { from { transform: scale(.92) translateY(6px); opacity: 0; } }
@@ -131,10 +117,8 @@
 
 /* ───────── Cambio di schermata (View Transitions) ───────── */
 .tabbar { view-transition-name: tabbar; }
-.fab { view-transition-name: fab; }
 ::view-transition-old(tabbar) { display: none; }
 ::view-transition-new(tabbar) { animation: none; }
-::view-transition-group(fab) { animation-duration: .3s; }
 
 ::view-transition-old(root),
 ::view-transition-new(root) { animation-duration: .34s; animation-timing-function: var(--morbido); }

@@ -64,10 +64,6 @@ function scheda(o, capi, i = 0) {
     </li>`;
 }
 
-export function fab(s) {
-  if (!s.outfit?.length) return "";
-  return html`<button class="btn primario fab" type="button" data-key="fab" data-azione="nuovo-outfit">${icona("shuffle", 20)}Nuovo outfit</button>`;
-}
 
 export const azioni = {
   "filtro-outfit": (el) => {

@@ -55,15 +55,29 @@ function guscio() {
   const pagina = [r.nome, ...r.param].join("/");
   return html`
     <main class="vista ${v.conTabbar ? "" : "senza-tabbar"}" id="vista" data-key="vista:${pagina}">${contenuto}</main>
-    ${v.conTabbar ? html`
-      ${v.fab(stato)}
-      <nav class="tabbar" data-key="tabbar" aria-label="Sezioni" style="--i:${SEZIONI.indexOf(r.sezione)}">
-        <span class="tab-indicatore" aria-hidden="true"></span>
+    ${v.conTabbar ? barraInBasso(r) : ""}`;
+}
+
+// L'azione principale sta nella barra, come quarto tasto: in Outfit genera, altrove aggiunge un capo.
+const CTA = {
+  outfit: { azione: "nuovo-outfit", icona: "shuffle", etichetta: "Genera", aria: "Genera un nuovo outfit" },
+  altro: { azione: "aggiungi-capo", icona: "plus", etichetta: "Aggiungi", aria: "Aggiungi un capo" },
+};
+
+function barraInBasso(r) {
+  const cta = CTA[r.sezione] || CTA.altro;
+  return html`
+    <nav class="tabbar" data-key="tabbar" aria-label="Sezioni">
+      <div class="tabbar-tasti">
         ${SEZIONI.map((nome) => html`
           <a class="tab" href="#/${nome}" ${r.sezione === nome ? html`aria-current="page"` : ""}>
             ${icona(TAB[nome].icona, 22)}<span>${TAB[nome].etichetta}</span>
           </a>`)}
-      </nav>` : ""}`;
+        <button class="tasto-cta" type="button" data-azione="${cta.azione}" aria-label="${cta.aria}">
+          ${icona(cta.icona, 22, 2.2)}<span aria-hidden="true">${cta.etichetta}</span>
+        </button>
+      </div>
+    </nav>`;
 }
 
 function senzaConfigurazione() {

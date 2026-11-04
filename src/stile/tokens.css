@@ -15,12 +15,19 @@
   --on-accent: #FFFFFF;
   --scrim: rgba(31, 31, 31, .28);
 
-  /* elevazione, solo sui comandi. Effetto sottile: offset piccoli, ombra scura chiara */
-  --e1: 2px 2px 5px var(--sh-dark), -2px -2px 5px var(--sh-light);
-  --e2: 4px 4px 12px var(--sh-dark), -4px -4px 12px var(--sh-light);
-  --e3: 6px 6px 16px var(--sh-dark), -6px -6px 16px var(--sh-light);
-  --in1: inset 1.5px 1.5px 3px var(--sh-dark), inset -1.5px -1.5px 3px var(--sh-light);
-  --in2: inset 2px 2px 5px var(--sh-dark), inset -2px -2px 5px var(--sh-light);
+  /* elevazione, solo sui comandi. Effetto sottile: offset piccoli, ombra scura chiara.
+     Ogni livello ha sempre quattro ombre (due esterne, due interne, quelle che non servono a zero):
+     così il passaggio da rilievo a incasso si anima, invece di scattare. */
+  --nulla: 0 0 0 0 transparent;
+  --e1: 2px 2px 5px var(--sh-dark), -2px -2px 5px var(--sh-light), inset var(--nulla), inset var(--nulla);
+  --e2: 4px 4px 12px var(--sh-dark), -4px -4px 12px var(--sh-light), inset var(--nulla), inset var(--nulla);
+  --e3: 6px 6px 16px var(--sh-dark), -6px -6px 16px var(--sh-light), inset var(--nulla), inset var(--nulla);
+  --in1: var(--nulla), var(--nulla), inset 1.5px 1.5px 3px var(--sh-dark), inset -1.5px -1.5px 3px var(--sh-light);
+  --in2: var(--nulla), var(--nulla), inset 2px 2px 5px var(--sh-dark), inset -2px -2px 5px var(--sh-light);
+  --in3: var(--nulla), var(--nulla), inset 3.5px 3.5px 8px var(--sh-dark), inset -3.5px -3.5px 8px var(--sh-light);
+  /* corallo: rilievo con un filo di luce, premuto con l'ombra dentro (stesse cinque ombre) */
+  --corallo-su: 2px 2px 5px var(--sh-dark), -2px -2px 5px var(--sh-light), inset 1px 1px 1px rgba(255, 255, 255, .22), inset var(--nulla), inset var(--nulla);
+  --corallo-giu: var(--nulla), var(--nulla), inset var(--nulla), inset 2px 2px 6px rgba(0, 0, 0, .24), inset -1px -1px 2px rgba(255, 255, 255, .14);
 
   /* forma */
   --r-sm: 12px; --r-md: 16px; --r-lg: 26px; --r-pill: 999px;
@@ -29,8 +36,9 @@
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
   --gutter: 16px;
   --touch: 44px;
-  --tabbar-h: 64px;
-  --tabbar-bottom: max(12px, env(safe-area-inset-bottom));
+  --tasto-h: 54px;                                   /* tasti della barra in basso */
+  --barra-pad: 10px;
+  --barra-h: calc(var(--tasto-h) + 2 * var(--barra-pad) + 1px); /* senza la safe area */
 
   /* tipografia */
   --font: "Inter", -apple-system, system-ui, sans-serif;

@@ -108,10 +108,11 @@ rompere i capi che la usano: `attiva = false`. Per toglierla del tutto, anche da
 - **Nome del capo facoltativo**: senza nome si mostra "Categoria · Colore".
 - **Stagioni e occasioni multiple** anche per gli outfit, come per i capi.
 - **Movimento** (`src/stile/movimento.css`, `src/ui/tocco.js`, `src/ui/morph.js`). Quello che tocchi affonda da rilievo
-  a incasso e torna su con un piccolo rimbalzo; le selezioni si incassano con una transizione; l'incasso della tab bar
-  scorre tra le sezioni; le pagine scorrono avanti e indietro (View Transitions, Safari 18+); fogli che salgono e
+  a incasso e torna su con un piccolo rimbalzo; le selezioni si incassano con una transizione; la barra in basso è fatta di
+  tasti fisici (la sezione attiva resta premuta, l'altra torna su) più il tasto corallo dell'azione principale
+  (Aggiungi, Genera in Outfit); le pagine scorrono avanti e indietro (View Transitions, Safari 18+); fogli che salgono e
   scendono, foto in dissolvenza. Per far partire le transizioni il DOM si aggiorna senza ricrearlo (morph). Con
-  "Riduci movimento" attivo su iPhone restano solo i cambi di stato. Niente sfumature sopra i contenuti.
+  "Riduci movimento" attivo su iPhone restano solo i cambi di stato. Niente sfumature sopra i contenuti: le barre in basso sono agganciate al fondo, con un filo netto in alto.
 - **Niente service worker**: l'offline non è richiesto, e così non c'è una cache da invalidare a ogni rilascio.
 - **Niente colore d'errore separato**: l'accento è già corallo; le azioni distruttive sono pulsanti neutri con
   conferma.
