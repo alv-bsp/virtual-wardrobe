@@ -107,6 +107,11 @@ rompere i capi che la usano: `attiva = false`. Per toglierla del tutto, anche da
   multiutente basterà aggiungere la colonna e la policy.
 - **Nome del capo facoltativo**: senza nome si mostra "Categoria · Colore".
 - **Stagioni e occasioni multiple** anche per gli outfit, come per i capi.
+- **Movimento** (`src/stile/movimento.css`, `src/ui/tocco.js`, `src/ui/morph.js`). Quello che tocchi affonda da rilievo
+  a incasso e torna su con un piccolo rimbalzo; le selezioni si incassano con una transizione; l'incasso della tab bar
+  scorre tra le sezioni; le pagine scorrono avanti e indietro (View Transitions, Safari 18+); fogli che salgono e
+  scendono, foto in dissolvenza. Per far partire le transizioni il DOM si aggiorna senza ricrearlo (morph). Con
+  "Riduci movimento" attivo su iPhone restano solo i cambi di stato. Niente sfumature sopra i contenuti.
 - **Niente service worker**: l'offline non è richiesto, e così non c'è una cache da invalidare a ogni rilascio.
 - **Niente colore d'errore separato**: l'accento è già corallo; le azioni distruttive sono pulsanti neutri con
   conferma.

@@ -27,7 +27,7 @@ const P = {
 
 export function icona(nome, dimensione = 20, spessore = 2) {
   return raw(
-    `<svg width="${dimensione}" height="${dimensione}" viewBox="0 0 24 24" fill="none" stroke="currentColor" ` +
+    `<svg class="ic ic-${nome}" width="${dimensione}" height="${dimensione}" viewBox="0 0 24 24" fill="none" stroke="currentColor" ` +
       `stroke-width="${spessore}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${P[nome]}</svg>`,
   );
 }

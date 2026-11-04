@@ -48,14 +48,14 @@ export function render(s, { avviso = "" } = {}) {
         </button>`)}
     </div>
     ${visibili.length
-      ? html`<ul class="griglia-outfit">${visibili.map((o) => scheda(o, capiDiOutfit(o.id)))}</ul>`
+      ? html`<ul class="griglia-outfit">${visibili.map((o, i) => scheda(o, capiDiOutfit(o.id), i))}</ul>`
       : vuoto({ icona: "layers", titolo: "Nessun outfit con questo filtro", testo: "Prova con un altro.",
           azione: html`<button class="btn" type="button" data-azione="filtro-outfit" data-valore="">Mostra tutti</button>` })}`;
 }
 
-function scheda(o, capi) {
+function scheda(o, capi, i = 0) {
   return html`
-    <li>
+    <li data-key="${o.id}" style="--n:${Math.min(i, 12)}">
       <a class="tessera-outfit" href="#/outfit/${o.id}">
         ${collage(capi)}
         <span class="tessera-nome">${o.preferito ? html`<span class="cuore" aria-label="Preferito">${icona("heart", 13, 2.4)}</span>` : ""}${nomeOutfit(o, capi)}</span>
@@ -66,7 +66,7 @@ function scheda(o, capi) {
 
 export function fab(s) {
   if (!s.outfit?.length) return "";
-  return html`<button class="btn primario fab" type="button" data-azione="nuovo-outfit">${icona("shuffle", 20)}Nuovo outfit</button>`;
+  return html`<button class="btn primario fab" type="button" data-key="fab" data-azione="nuovo-outfit">${icona("shuffle", 20)}Nuovo outfit</button>`;
 }
 
 export const azioni = {

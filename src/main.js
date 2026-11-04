@@ -1,6 +1,7 @@
 import "./stile/tokens.css";
 import "./stile/base.css";
 import "./stile/componenti.css";
+import "./stile/movimento.css";
 
 import { configurato } from "./config.js";
 import { sb } from "./supabase.js";
@@ -11,7 +12,9 @@ import { esci } from "./accesso.js";
 import { rotta, normalizza, vai, SEZIONI } from "./router.js";
 import { html } from "./ui/html.js";
 import { icona } from "./ui/icone.js";
-import { toast, apriFoglio, chiudiFoglio, preparaFoglio } from "./ui/avvisi.js";
+import { apriFoglio, chiudiFoglio, chiudiFoglioSubito, preparaFoglio } from "./ui/avvisi.js";
+import { morph } from "./ui/morph.js";
+import { preparaTocco, transizione, anima } from "./ui/tocco.js";
 import { avviso } from "./viste/comuni.js";
 import * as armadio from "./viste/armadio.js";
 import * as outfit from "./viste/outfit.js";
@@ -47,12 +50,15 @@ function guscio() {
   const v = vistaPer(r);
   document.title = v.titolo && v.titolo !== "Armadio" ? `${v.titolo} · Armadio` : "Armadio";
   const contenuto = v.render(stato, { rotta: r, avviso: stato.errore ? avviso(stato.errore) : "" });
+  // La chiave della vista cambia con la pagina: cambiando pagina il contenuto si ricrea da capo,
+  // restando sulla stessa pagina si aggiorna solo quello che cambia. Tab bar e pulsante principale restano.
+  const pagina = [r.nome, ...r.param].join("/");
   return html`
-    <main class="vista ${v.conTabbar ? "" : "senza-tabbar"}" id="vista">${contenuto}</main>
+    <main class="vista ${v.conTabbar ? "" : "senza-tabbar"}" id="vista" data-key="vista:${pagina}">${contenuto}</main>
     ${v.conTabbar ? html`
-      <div class="velo" aria-hidden="true"></div>
       ${v.fab(stato)}
-      <nav class="tabbar" aria-label="Sezioni">
+      <nav class="tabbar" data-key="tabbar" aria-label="Sezioni" style="--i:${SEZIONI.indexOf(r.sezione)}">
+        <span class="tab-indicatore" aria-hidden="true"></span>
         ${SEZIONI.map((nome) => html`
           <a class="tab" href="#/${nome}" ${r.sezione === nome ? html`aria-current="page"` : ""}>
             ${icona(TAB[nome].icona, 22)}<span>${TAB[nome].etichetta}</span>
@@ -73,8 +79,9 @@ function senzaConfigurazione() {
 }
 
 /**
- * Ridisegna la vista giusta. La pagina di accesso non si ridisegna da sola, per non perdere quello che stai
- * scrivendo; nelle altre il campo attivo (ricerca, nome, note) riprende il fuoco e il cursore dov'erano.
+ * Ridisegna la vista giusta. Dentro l'app aggiorna il DOM invece di rifarlo (morph): i cambi di stato
+ * si animano, i campi tengono fuoco e cursore. La pagina di accesso non si ridisegna da sola, per non perdere
+ * quello che stai scrivendo.
  */
 function disegna() {
   let nome, contenuto;
@@ -85,21 +92,22 @@ function disegna() {
     [nome, contenuto] = ["accesso", accesso.render()];
   } else [nome, contenuto] = ["app", guscio()];
 
-  const attivo = document.activeElement;
-  const chiave = attivo?.dataset?.input ? `[data-input="${attivo.dataset.input}"]${attivo.dataset.campo ? `[data-campo="${attivo.dataset.campo}"]` : ""}` : null;
-  const selezione = chiave ? [attivo.selectionStart, attivo.selectionEnd] : null;
-
+  if (nome === "app" && app.dataset.vista === "app") morph(app, contenuto);
+  else app.innerHTML = String(contenuto);
   app.dataset.vista = nome;
-  app.innerHTML = String(contenuto);
 
-  if (chiave) {
-    const el = app.querySelector(chiave);
-    if (el) {
-      el.focus({ preventScroll: true });
-      try { el.setSelectionRange(...selezione); } catch { /* campi senza selezione */ }
-    }
+  if (nome === "app") {
+    idrataFoto(app);
+    // Da qui in poi i capi e gli slot che compaiono (filtri, Genera) entrano con un'animazione.
+    const vista = document.getElementById("vista");
+    if (vista && !vista.hasAttribute("data-js-montato")) requestAnimationFrame(() => vista.setAttribute("data-js-montato", ""));
   }
-  if (nome === "app") idrataFoto(app);
+}
+
+/** Profondità di una pagina: sezioni 0, schede 1, modifiche 2. Decide il verso della transizione. */
+function profondita(r) {
+  if (!r.param.length && r.nome !== "nuovo") return 0;
+  return r.param[1] === "modifica" ? 2 : 1;
 }
 
 // ───────────────────────────────────────── azioni
@@ -116,6 +124,10 @@ const AZIONI = {
   "aggiungi-capo": () => { modoFoto = "nuovo"; sceltaFoto.click(); },
   "scegli-foto": () => { modoFoto = "cambia"; sceltaFoto.click(); },
   "nuovo-outfit": () => { compositore.nuovoOutfit(); vai("outfit/nuovo"); },
+  genera: (el) => {
+    anima(el.querySelector("svg"), [{ transform: "rotate(0)" }, { transform: "rotate(180deg) scale(1.15)" }, { transform: "rotate(360deg)" }], { duration: 520 });
+    compositore.azioni.genera(el);
+  },
   "componi-con": (el) => { compositore.componiCon(el.dataset.id); vai("outfit/nuovo"); },
   account: () => apriFoglio(account.render(stato)),
   "chiudi-foglio": chiudiFoglio,
@@ -166,10 +178,15 @@ window.addEventListener("hashchange", () => {
   const prima = vistaPer(rottaPrecedente);
   const stessaPagina = prima === vistaPer(r) && r.nome === rottaPrecedente.nome && r.param.join("/") === rottaPrecedente.param.join("/");
   if (prima.abbandona && !stessaPagina) prima.abbandona();
+  const verso = profondita(r) > profondita(rottaPrecedente) ? "avanti"
+    : profondita(r) < profondita(rottaPrecedente) ? "indietro"
+    : profondita(r) === 0 ? "tab" : "avanti";
   rottaPrecedente = r;
-  chiudiFoglio();
-  disegna();
-  window.scrollTo(0, 0);
+  chiudiFoglioSubito();
+  transizione(verso, () => {
+    disegna();
+    window.scrollTo(0, 0);
+  });
   document.querySelector("#vista h1")?.focus({ preventScroll: true });
 });
 
@@ -178,6 +195,7 @@ async function avvia() {
   normalizza();
   rottaPrecedente = rotta();
   preparaFoglio();
+  preparaTocco();
   ascolta(disegna);
   if (!configurato) return disegna();
 

@@ -142,7 +142,7 @@ export function render(s, { rotta }) {
       </div>
 
       <ul class="slot-lista">
-        ${SLOT.map((def) => rigaSlot(def, b))}
+        ${SLOT.map((def, i) => rigaSlot(def, b, i))}
       </ul>
       ${b.extra.length ? html`
         <div class="gruppo">
@@ -183,12 +183,12 @@ const chipContesto = (campo, v, scelte) => {
     </button>`;
 };
 
-function rigaSlot(def, b) {
+function rigaSlot(def, b, i = 0) {
   const c = b.slot[def.id] ? trovaCapo(b.slot[def.id]) : null;
   const bloccato = b.bloccati.has(def.id);
   return html`
-    <li class="slot">
-      <button class="slot-scelta" type="button" data-azione="scegli-slot" data-slot="${def.id}">
+    <li class="slot" data-key="slot:${def.id}" style="--n:${i}">
+      <button class="slot-scelta" type="button" data-azione="scegli-slot" data-slot="${def.id}" data-key="${def.id}:${c?.id || "vuoto"}">
         ${c ? foto(c.miniatura) : html`<div class="foto vuoto-slot">${icona("plus", 18)}</div>`}
         <span class="slot-testo">
           <span class="slot-nome">${def.nome}</span>

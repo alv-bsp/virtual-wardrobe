@@ -172,16 +172,6 @@
   box-shadow: var(--e3), inset 1px 1px 1px rgba(255, 255, 255, .22);
 }
 
-/* i contenuti scorrono sotto i comandi in basso, che restano leggibili */
-.velo {
-  position: fixed;
-  z-index: 19;
-  left: 0; right: 0; bottom: 0;
-  height: calc(var(--tabbar-bottom) + var(--tabbar-h) + 96px);
-  pointer-events: none;
-  background: linear-gradient(to bottom, rgba(242, 242, 241, 0), rgba(242, 242, 241, .88) 40%, var(--base) 62%);
-}
-
 /* ───────── Stati vuoti e avvisi ───────── */
 .vuoto {
   display: grid;
@@ -498,10 +488,10 @@ details.gruppo[open] summary::before { content: "−"; }
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 28px max(var(--gutter), env(safe-area-inset-right)) calc(max(12px, env(safe-area-inset-bottom)) + 4px) max(var(--gutter), env(safe-area-inset-left));
-  background: linear-gradient(to bottom, rgba(242, 242, 241, 0), var(--base) 42%);
+  padding: 0 max(var(--gutter), env(safe-area-inset-right)) calc(max(12px, env(safe-area-inset-bottom)) + 4px) max(var(--gutter), env(safe-area-inset-left));
+  pointer-events: none; /* il pulsante galleggia sui contenuti, senza sfumature dietro */
 }
-.barra-salva .btn { display: flex; max-width: 688px; margin: 0 auto; }
+.barra-salva .btn { display: flex; max-width: 688px; margin: 0 auto; pointer-events: auto; }
 
 /* ───────── Fogli: gruppi e azioni ───────── */
 .foglio .gruppo { margin-bottom: var(--s5); }

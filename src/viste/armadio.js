@@ -50,7 +50,7 @@ function rigaChip(s) {
   return html`
     <div class="chips-riga" role="group" aria-label="Filtri">
       <button class="chip" type="button" data-azione="apri-filtri" aria-haspopup="dialog">
-        ${icona("sliders", 17)}Filtri${n ? html`<span class="conteggio" aria-label="${n} attivi">${n}</span>` : ""}
+        ${icona("sliders", 17)}Filtri${n ? html`<span class="conteggio" data-key="n${n}" aria-label="${n} attivi">${n}</span>` : ""}
       </button>
       <button class="chip" type="button" data-azione="categoria" data-valore="" aria-pressed="${!f.categoria}">
         ${!f.categoria ? icona("check", 15, 2.6) : ""}Tutti
@@ -65,8 +65,8 @@ function rigaChip(s) {
 function griglia(capi) {
   return html`
     <ul class="griglia">
-      ${capi.map((c) => html`
-        <li>
+      ${capi.map((c, i) => html`
+        <li data-key="${c.id}" style="--n:${Math.min(i, 12)}">
           <a class="tessera" href="#/capo/${c.id}">
             ${foto(c.miniatura)}
             ${etichettaStato(c.stato) ? html`<span class="etichetta-stato">${etichettaStato(c.stato)}</span>` : ""}
@@ -97,7 +97,7 @@ function nessunRisultato(s) {
 // L'azione principale galleggia solo quando c'è già qualcosa: con l'armadio vuoto la porta lo stato vuoto.
 export function fab(s) {
   if (!s.capi?.length) return "";
-  return html`<button class="btn primario fab" type="button" data-azione="aggiungi-capo">${icona("plus")}Aggiungi capo</button>`;
+  return html`<button class="btn primario fab" type="button" data-key="fab" data-azione="aggiungi-capo">${icona("plus")}Aggiungi capo</button>`;
 }
 
 const cambiaFiltri = (modifiche) => aggiorna({ filtri: { ...stato.filtri, ...modifiche } });
