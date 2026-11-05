@@ -5,9 +5,9 @@ import { nomeVoce, nomeCapo } from "../voci.js";
 import { eliminaCapo } from "../dati.js";
 import { sostituisci } from "../router.js";
 import { apriFoglio, chiudiFoglio, toast } from "../ui/avvisi.js";
-import { barra, vuoto, foto, pallino, collage, nomeOutfit, descriviOutfit } from "./comuni.js";
+import { barra, vuoto, foto, pallino, collage, nomeOutfit, descriviOutfit, etichettaStato } from "./comuni.js";
 
-export const conTabbar = true;
+export const conTabbar = false; // la scheda ha la sua barra di azioni, come un annuncio
 
 const data = (iso) => new Date(iso).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
 const elenco = (lista, slugs) => slugs.length ? slugs.map((s) => nomeVoce(lista, s)).join(", ") : "—";
@@ -24,45 +24,54 @@ export function render(s, { rotta, avviso = "" }) {
   }
 
   const inOutfit = outfitDiCapo(c.id);
+  const stato = etichettaStato(c.stato);
   return html`
-    ${barra({
-      indietro: "Armadio",
-      href: "#/armadio",
-      azione: html`<a class="btn piccolo" href="#/capo/${c.id}/modifica">${icona("pencil", 16)}Modifica</a>`,
-    })}
-    ${avviso}
     <article class="scheda">
-      ${foto(c.foto, { classe: "grande", alt: `Foto: ${nomeCapo(c)}` })}
-      <h1 tabindex="-1">${nomeCapo(c)}</h1>
-      <p class="sotto">${nomeVoce("categoria", c.categoria)}${c.marca ? ` · ${c.marca}` : ""}</p>
-      <dl class="righe">
-        <div><dt>Colore</dt><dd class="colori">
-          ${[c.colore, ...c.colori_secondari].map((k) => html`<span>${pallino(k)}${nomeVoce("colore", k)}</span>`)}
-        </dd></div>
-        <div><dt>Stagioni</dt><dd>${elenco("stagione", c.stagioni)}</dd></div>
-        <div><dt>Occasioni</dt><dd>${elenco("occasione", c.occasioni)}</dd></div>
-        <div><dt>Stato</dt><dd>${nomeVoce("stato", c.stato)}</dd></div>
-        ${c.note ? html`<div class="nota-capo"><dt>Note</dt><dd>${c.note}</dd></div>` : ""}
-        <div><dt>Aggiunto</dt><dd>${data(c.creato_il)}</dd></div>
-      </dl>
-      <section class="sezione">
-        <h2>Outfit</h2>
-        ${inOutfit.length
-          ? html`<ul class="lista-outfit">${inOutfit.map((o) => html`
-              <li>
-                <a class="riga-outfit" href="#/outfit/${o.id}">
-                  ${collage(capiDiOutfit(o.id), "piccolo")}
-                  <span><span class="riga-nome">${nomeOutfit(o, capiDiOutfit(o.id))}</span>
-                  ${descriviOutfit(o) ? html`<span class="riga-meta">${descriviOutfit(o)}</span>` : ""}</span>
-                  ${icona("chevron-right", 18)}
-                </a>
-              </li>`)}</ul>`
-          : html`<p class="nota">Non compare ancora in nessun outfit.</p>`}
+      <div class="eroe">
+        ${foto(c.foto, { alt: `Foto: ${nomeCapo(c)}` })}
+        <a class="tondo-foto sinistra indietro" href="#/armadio" aria-label="Torna all'armadio">${icona("arrow-left", 20)}</a>
+        <a class="tondo-foto destra" href="#/capo/${c.id}/modifica" aria-label="Modifica il capo">${icona("pencil", 18)}</a>
+      </div>
+      <div class="pannello">
+        <h1 tabindex="-1">${nomeCapo(c)}</h1>
+        <p class="sotto">${nomeVoce("categoria", c.categoria)}${c.marca ? ` · ${c.marca}` : ""}</p>
+        ${stato ? html`<div class="etichetta-centro"><span class="etichetta-stato">${stato}</span></div>` : ""}
+        ${avviso}
+        <dl class="righe">
+          <div><dt>Colore</dt><dd class="colori">
+            ${[c.colore, ...c.colori_secondari].map((k) => html`<span>${pallino(k)}${nomeVoce("colore", k)}</span>`)}
+          </dd></div>
+          <div><dt>Stagioni</dt><dd>${elenco("stagione", c.stagioni)}</dd></div>
+          <div><dt>Occasioni</dt><dd>${elenco("occasione", c.occasioni)}</dd></div>
+          ${c.note ? html`<div class="nota-capo"><dt>Note</dt><dd>${c.note}</dd></div>` : ""}
+          <div><dt>Aggiunto</dt><dd>${data(c.creato_il)}</dd></div>
+        </dl>
+        <section class="sezione">
+          <h2>Outfit</h2>
+          ${inOutfit.length
+            ? html`<ul class="lista-outfit">${inOutfit.map((o) => html`
+                <li>
+                  <a class="riga-outfit" href="#/outfit/${o.id}">
+                    ${collage(capiDiOutfit(o.id), "piccolo")}
+                    <span><span class="riga-nome">${nomeOutfit(o, capiDiOutfit(o.id))}</span>
+                    ${descriviOutfit(o) ? html`<span class="riga-meta">${descriviOutfit(o)}</span>` : ""}</span>
+                    ${icona("chevron-right", 18)}
+                  </a>
+                </li>`)}</ul>`
+            : html`<p class="nota">Non compare ancora in nessun outfit.</p>`}
+        </section>
+        <div class="elimina">
+          <button class="link neutro" type="button" data-azione="elimina-capo" data-id="${c.id}">Elimina capo</button>
+        </div>
+      </div>
+    </article>
+    <div class="barra-azioni">
+      <div class="barra-azioni-interno">
+        <a class="btn ${c.stato === "wishlist" ? "primario" : ""}" href="#/capo/${c.id}/modifica">${icona("pencil", 18)}Modifica</a>
         ${c.stato !== "wishlist" ? html`
-          <button class="btn largo" type="button" data-azione="componi-con" data-id="${c.id}">${icona("shuffle", 18)}Crea un outfit con questo capo</button>` : ""}
-      </section>
-      <button class="btn largo" type="button" data-azione="elimina-capo" data-id="${c.id}">${icona("trash", 18)}Elimina capo</button>
-    </article>`;
+          <button class="btn primario" type="button" data-azione="componi-con" data-id="${c.id}">${icona("shuffle", 19)}Crea outfit</button>` : ""}
+      </div>
+    </div>`;
 }
 
 function conferma(c) {

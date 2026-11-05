@@ -2,7 +2,7 @@ import { html } from "../ui/html.js";
 import { icona } from "../ui/icone.js";
 import { aggiorna, stato } from "../stato.js";
 import { filtra, contaAttivi, filtriVuoti, STATI_BASE } from "../filtri.js";
-import { voci, nomeCapo } from "../voci.js";
+import { voci, nomeCapo, nomeVoce } from "../voci.js";
 import { apriFoglio } from "../ui/avvisi.js";
 import { testata, vuoto, contaCapi, foto, etichettaStato } from "./comuni.js";
 import * as foglioFiltri from "./filtri.js";
@@ -62,6 +62,9 @@ function rigaChip(s) {
     </div>`;
 }
 
+// Sotto il nome, in grigio: la marca, o la categoria se il nome non la dice già.
+const dettaglio = (c) => c.marca || (c.nome?.trim() ? nomeVoce("categoria", c.categoria) : "");
+
 function griglia(capi) {
   return html`
     <ul class="griglia">
@@ -71,6 +74,7 @@ function griglia(capi) {
             ${foto(c.miniatura)}
             ${etichettaStato(c.stato) ? html`<span class="etichetta-stato">${etichettaStato(c.stato)}</span>` : ""}
             <span class="tessera-nome">${nomeCapo(c)}</span>
+            ${dettaglio(c) ? html`<span class="tessera-meta">${dettaglio(c)}</span>` : ""}
           </a>
         </li>`)}
     </ul>`;

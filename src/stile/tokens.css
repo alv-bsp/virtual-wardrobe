@@ -1,47 +1,47 @@
 /* Armadio · design token
-   Regola: quello che si tocca ha un leggero rilievo, quello che si guarda è piatto.
-   Contrasti su --base: testo ≥ 4,5:1, icone e bordi ≥ 3:1 (WCAG AA). */
+   Stile: pulito come Airbnb (fondo bianco, foto protagoniste, titoli grandi, superfici piatte), con pochi
+   elementi "soft" che sembrano tasti fisici: la barra di navigazione, il disco +, i pulsanti principali,
+   i chip, la ricerca e i lucchetti. In rilievo = si può premere; incassato e grigio = premuto o selezionato.
+   Contrasti su bianco: testo ≥ 4,5:1, icone e bordi dei campi ≥ 3:1 (WCAG AA). */
 :root {
   /* colore */
-  --base: #F2F2F1;          /* gesso: sfondo e superfici, unico colore di base */
-  --sh-light: #FFFFFF;      /* ombra chiara, in alto a sinistra */
-  --sh-dark: #DADAD6;       /* ombra scura, in basso a destra: gesso scurito, volutamente tenue */
-  --photo-bg: #E6E6E4;      /* fondo dietro le foto */
-  --line: #E3E3E0;          /* filetti decorativi */
-  --ink: #1F1F1F;           /* testo e anello di focus · 14,7:1 */
-  --ink-2: #666664;         /* testo secondario e segnaposto · 5,1:1 */
-  --accent: #D2413A;        /* corallo: pieni, icone, contatori · bianco sopra 4,6:1 */
-  --accent-text: #C4372F;   /* stesso accento per il testo piccolo · 4,8:1 */
+  --base: #FFFFFF;          /* fondo e superfici */
+  --grigio: #F2F2F2;        /* pulsanti secondari, cerchi, tasti premuti */
+  --grigio-2: #EBEBEB;      /* grigio premuto */
+  --photo-bg: #EEEEEE;      /* fondo dietro le foto e celle vuote dei collage */
+  --line: #EBEBEB;          /* filetti decorativi */
+  --bordo-campo: #929292;   /* bordo dei campi · 3,1:1 */
+  --ink: #222222;           /* testo e anello di focus · 15,9:1 */
+  --ink-2: #6A6A6A;         /* testo secondario e segnaposto · 5,4:1 (4,8:1 sul grigio) */
+  --accent: #D2413A;        /* corallo: icone e contatori · 4,6:1 */
+  --accent-text: #C4372F;   /* corallo per il testo · 5,3:1 (4,8:1 sul grigio) */
   --on-accent: #FFFFFF;
-  --scrim: rgba(31, 31, 31, .28);
+  --scrim: rgba(0, 0, 0, .32);
 
-  /* elevazione, solo sui comandi. Effetto sottile: offset piccoli, ombra scura chiara.
-     Ogni livello ha sempre quattro ombre (due esterne, due interne, quelle che non servono a zero):
-     così il passaggio da rilievo a incasso si anima, invece di scattare. */
+  /* ombre. I livelli soft hanno sempre quattro componenti (due esterne, due interne, quelle che non
+     servono a zero): così il passaggio da rilievo a incasso si anima invece di scattare. */
   --nulla: 0 0 0 0 transparent;
-  --e1: 2px 2px 5px var(--sh-dark), -2px -2px 5px var(--sh-light), inset var(--nulla), inset var(--nulla);
-  --e2: 4px 4px 12px var(--sh-dark), -4px -4px 12px var(--sh-light), inset var(--nulla), inset var(--nulla);
-  --e3: 6px 6px 16px var(--sh-dark), -6px -6px 16px var(--sh-light), inset var(--nulla), inset var(--nulla);
-  --in1: var(--nulla), var(--nulla), inset 1.5px 1.5px 3px var(--sh-dark), inset -1.5px -1.5px 3px var(--sh-light);
-  --in2: var(--nulla), var(--nulla), inset 2px 2px 5px var(--sh-dark), inset -2px -2px 5px var(--sh-light);
-  --in3: var(--nulla), var(--nulla), inset 3.5px 3.5px 8px var(--sh-dark), inset -3.5px -3.5px 8px var(--sh-light);
-  /* azione principale: stesso materiale della UI, un rilievo più marcato ma compatto (resta dentro la barra) */
-  --e-cta: 3.5px 3.5px 8px var(--sh-dark), -3.5px -3.5px 8px var(--sh-light), inset var(--nulla), inset var(--nulla);
+  --e1: 0 1px 2px rgba(0, 0, 0, .08), 0 3px 10px rgba(0, 0, 0, .07), inset 0 0 0 1px rgba(0, 0, 0, .04), inset var(--nulla);
+  --e2: 0 2px 4px rgba(0, 0, 0, .06), 0 6px 18px rgba(0, 0, 0, .11), inset 0 0 0 1px rgba(0, 0, 0, .04), inset var(--nulla);
+  --in1: var(--nulla), var(--nulla), inset 0 0 0 1px rgba(0, 0, 0, .05), inset 0 2px 5px rgba(0, 0, 0, .12);
+  --in2: var(--nulla), var(--nulla), inset 0 0 0 1px rgba(0, 0, 0, .06), inset 0 3px 7px rgba(0, 0, 0, .14);
+  --scheda: 0 6px 20px rgba(0, 0, 0, .08);           /* card piatte, come quelle di Airbnb */
+  --su-foto: 0 2px 8px rgba(0, 0, 0, .18);           /* pulsanti tondi sopra le foto */
 
   /* forma */
-  --r-sm: 12px; --r-md: 16px; --r-lg: 26px; --r-pill: 999px;
+  --r-sm: 12px; --r-md: 16px; --r-lg: 24px; --r-xl: 28px; --r-pill: 999px;
 
   /* spazio */
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
-  --gutter: 16px;
+  --gutter: 20px;
   --touch: 44px;
-  --tasto-h: 58px;                                   /* il tasto principale della barra in basso */
-  --barra-pad: 12px;
+  --tasto-h: 56px;                                   /* il disco + della barra in basso */
+  --barra-pad: 10px;
   --barra-h: calc(var(--tasto-h) + 2 * var(--barra-pad) + 1px); /* senza la safe area */
 
   /* tipografia */
   --font: "Inter", -apple-system, system-ui, sans-serif;
-  --t-xs: 13px; --t-sm: 15px; --t-md: 17px; --t-lg: 20px; --t-xl: 28px; --t-2xl: 36px;
+  --t-xs: 13px; --t-sm: 15px; --t-md: 17px; --t-lg: 22px; --t-xl: 32px; --t-2xl: 36px;
 
   /* movimento */
   --dur: 160ms; --dur-long: 240ms; --ease: cubic-bezier(.2, .7, .3, 1);

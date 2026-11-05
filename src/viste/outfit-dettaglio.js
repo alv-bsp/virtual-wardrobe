@@ -6,10 +6,10 @@ import { SLOT, slotDi } from "../outfit.js";
 import { eliminaOutfit, impostaPreferito } from "../dati.js";
 import { sostituisci } from "../router.js";
 import { apriFoglio, chiudiFoglio, toast } from "../ui/avvisi.js";
-import { barra, vuoto, foto, inOrdine, nomeOutfit, descriviOutfit } from "./comuni.js";
+import { barra, vuoto, foto, collage, inOrdine, nomeOutfit, descriviOutfit } from "./comuni.js";
 
 export const titolo = "Outfit";
-export const conTabbar = true;
+export const conTabbar = false; // come la scheda di un capo: foto in alto e barra di azioni
 
 const nomeSlot = (c) => SLOT.find((s) => s.id === slotDi(c))?.nome || "";
 
@@ -26,34 +26,42 @@ export function render(s, { rotta, avviso = "" }) {
   const capi = inOrdine(capiDiOutfit(o.id));
 
   return html`
-    ${barra({
-      indietro: "Outfit",
-      href: "#/outfit",
-      azione: html`<a class="btn piccolo" href="#/outfit/${o.id}/modifica">${icona("pencil", 16)}Modifica</a>`,
-    })}
-    ${avviso}
     <article class="scheda">
-      <ul class="griglia-capi-outfit">
-        ${capi.map((c) => html`
-          <li>
-            <a class="tessera" href="#/capo/${c.id}">
-              ${foto(c.miniatura)}
-              <span class="tessera-meta">${nomeSlot(c)}</span>
-              <span class="tessera-nome">${nomeCapo(c)}</span>
-            </a>
-          </li>`)}
-      </ul>
-      ${!capi.length ? html`<p class="nota">I capi di questo outfit sono stati eliminati.</p>` : ""}
-      <h1 tabindex="-1">${nomeOutfit(o, capi)}</h1>
-      ${descriviOutfit(o) ? html`<p class="sotto">${descriviOutfit(o)}</p>` : ""}
-      <div class="azioni-riga">
-        <button class="chip" type="button" data-azione="preferito" data-id="${o.id}" aria-pressed="${o.preferito}">
-          ${icona("heart", 17, 2)}${o.preferito ? "Tra i preferiti" : "Aggiungi ai preferiti"}
-        </button>
+      <div class="eroe">
+        ${collage(capi)}
+        <a class="tondo-foto sinistra indietro" href="#/outfit" aria-label="Torna agli outfit">${icona("arrow-left", 20)}</a>
+        <button class="tondo-foto destra" type="button" data-azione="preferito" data-id="${o.id}" aria-pressed="${o.preferito}"
+          aria-label="${o.preferito ? "Togli dai preferiti" : "Aggiungi ai preferiti"}">${icona("heart", 19, 2)}</button>
       </div>
-      ${o.note ? html`<p class="note-outfit">${o.note}</p>` : ""}
-      <button class="btn largo" type="button" data-azione="elimina-outfit" data-id="${o.id}">${icona("trash", 18)}Elimina outfit</button>
-    </article>`;
+      <div class="pannello">
+        <h1 tabindex="-1">${nomeOutfit(o, capi)}</h1>
+        <p class="sotto">${descriviOutfit(o) || (capi.length === 1 ? "1 capo" : `${capi.length} capi`)}</p>
+        ${avviso}
+        ${o.note ? html`<p class="note-outfit">${o.note}</p>` : ""}
+        <section class="sezione">
+          <h2>Capi</h2>
+          ${capi.length ? html`
+            <ul class="griglia-capi-outfit">
+              ${capi.map((c) => html`
+                <li>
+                  <a class="tessera" href="#/capo/${c.id}">
+                    ${foto(c.miniatura)}
+                    <span class="tessera-meta">${nomeSlot(c)}</span>
+                    <span class="tessera-nome">${nomeCapo(c)}</span>
+                  </a>
+                </li>`)}
+            </ul>` : html`<p class="nota">I capi di questo outfit sono stati eliminati.</p>`}
+        </section>
+        <div class="elimina">
+          <button class="link neutro" type="button" data-azione="elimina-outfit" data-id="${o.id}">Elimina outfit</button>
+        </div>
+      </div>
+    </article>
+    <div class="barra-azioni">
+      <div class="barra-azioni-interno">
+        <a class="btn primario" href="#/outfit/${o.id}/modifica">${icona("pencil", 18)}Modifica outfit</a>
+      </div>
+    </div>`;
 }
 
 function conferma(o) {

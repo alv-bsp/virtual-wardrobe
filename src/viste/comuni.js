@@ -16,11 +16,11 @@ export function testata(titolo, sotto = "") {
     </header>`;
 }
 
-/** Barra delle pagine interne: indietro a sinistra, un'azione a destra. */
+/** Barra delle pagine interne: cerchio per uscire a sinistra (× se annulla, ← se torna), titolo, azione. */
 export function barra({ indietro, href, azione = "", titolo = "" }) {
   return html`
     <header class="barra">
-      <a class="indietro" href="${href}">${icona("chevron-left", 22)}<span>${indietro}</span></a>
+      <a class="icona-btn indietro" href="${href}" aria-label="${indietro}">${icona(indietro === "Annulla" ? "x" : "arrow-left", 20)}</a>
       ${titolo ? html`<h1 class="barra-titolo" tabindex="-1">${titolo}</h1>` : html`<span aria-hidden="true"></span>`}
       <div class="barra-azione">${azione}</div>
     </header>`;

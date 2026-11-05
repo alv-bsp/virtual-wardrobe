@@ -1,6 +1,6 @@
 /* Armadio · movimento
-   La grammatica del soft UI, in movimento: quello che tocchi affonda (da rilievo a incasso) e torna su con un
-   piccolo rimbalzo; quello che selezioni si incassa con una transizione, non di colpo.
+   Quello che tocchi risponde: i tasti soft (navigazione, disco +, pulsanti principali, chip, lucchetti)
+   affondano da rilievo a incasso e tornano su con un piccolo rimbalzo; gli elementi piatti si stringono appena.
    Con prefers-reduced-motion base.css azzera durate e animazioni: restano solo i cambi di stato. */
 
 :root {
@@ -8,14 +8,14 @@
   --morbido: cubic-bezier(.2, .8, .2, 1);         /* entrate */
   --dur-premi: 90ms;
   --dur-rilascio: 420ms;
-  --dur-stato: 260ms;
-  --in-premuto: var(--nulla), var(--nulla), inset 2.5px 2.5px 6px var(--sh-dark), inset -2.5px -2.5px 6px var(--sh-light);
+  --dur-stato: 240ms;
 }
 
 /* ───────── Pressione ───────── */
-.btn, .chip, .icona-btn, .link, .indietro, .foto.vuota {
+.btn, .chip, .icona-btn, .link, .foto.vuota, .tondo-foto {
   transition:
     box-shadow var(--dur-stato) var(--ease),
+    background-color var(--dur-stato) var(--ease),
     transform var(--dur-rilascio) var(--molla),
     color var(--dur-stato) var(--ease),
     opacity var(--dur-stato) var(--ease);
@@ -23,32 +23,33 @@
   user-select: none;
   touch-action: manipulation;
 }
-:is(.btn, .chip, .icona-btn, .link, .indietro, .foto.vuota)[data-js-premuto] {
+:is(.btn, .chip, .icona-btn, .link, .foto.vuota, .tondo-foto)[data-js-premuto] {
   transition-duration: var(--dur-premi);
   transition-timing-function: ease-out;
 }
-.btn[data-js-premuto] { transform: scale(.965); box-shadow: var(--in-premuto); }
-.btn.primario[data-js-premuto] { transform: scale(.97); box-shadow: var(--in-premuto); }
-.chip[data-js-premuto] { transform: scale(.95); box-shadow: var(--in-premuto); }
-.icona-btn[data-js-premuto] { transform: scale(.9); box-shadow: var(--in-premuto); }
-.foto.vuota[data-js-premuto] { transform: scale(.97); }
-:is(.link, .indietro)[data-js-premuto] { opacity: .55; }
+/* piatti: si scuriscono e si stringono */
+.btn[data-js-premuto] { background: var(--grigio-2); transform: scale(.97); }
+.icona-btn[data-js-premuto] { background: var(--grigio-2); transform: scale(.92); }
+.tondo-foto[data-js-premuto] { transform: scale(.9); }
+.foto.vuota[data-js-premuto] { background: var(--grigio-2); transform: scale(.97); }
+.link[data-js-premuto] { opacity: .55; }
+/* soft: affondano */
+.btn.primario[data-js-premuto] { background: var(--grigio); box-shadow: var(--in2); transform: scale(.98); }
+.chip[data-js-premuto] { background: var(--grigio); box-shadow: var(--in1); transform: scale(.96); }
+.icona-btn.blocco[data-js-premuto] { background: var(--grigio); box-shadow: var(--in1); }
 
-/* Contenuti piatti toccabili: niente ombre, si stringono appena */
+/* Contenuti piatti toccabili: si stringono appena */
 .tessera .foto, .tessera-outfit .collage, .scelta-capo .foto {
   transition: transform var(--dur-rilascio) var(--molla), outline-color var(--dur-stato) var(--ease);
 }
 :is(.tessera, .scelta-capo)[data-js-premuto] .foto,
-.tessera-outfit[data-js-premuto] .collage { transform: scale(.955); transition-duration: var(--dur-premi); }
-.tessera:active .foto, .tessera-outfit:active .collage { opacity: 1; } /* sostituito dalla pressione */
+.tessera-outfit[data-js-premuto] .collage { transform: scale(.96); transition-duration: var(--dur-premi); }
 :is(.slot-scelta, .riga-outfit) { transition: opacity var(--dur-stato) var(--ease), transform var(--dur-rilascio) var(--molla); }
 :is(.slot-scelta, .riga-outfit)[data-js-premuto] { opacity: .6; transform: scale(.985); transition-duration: var(--dur-premi); }
 
-/* Campi: si incassano un po' di più quando ci scrivi */
-.cerca, .campo input, .campo textarea { transition: box-shadow var(--dur-stato) var(--ease); }
-.cerca:focus-within, .campo input:focus, .campo textarea:focus {
-  box-shadow: var(--in3);
-}
+/* Campi */
+.cerca { transition: box-shadow var(--dur-stato) var(--ease); }
+.campo input, .campo textarea { transition: border-color var(--dur-stato) var(--ease), box-shadow var(--dur-stato) var(--ease); }
 
 /* In attesa (Salvo…, Accesso in corso…) il pulsante respira */
 .btn[aria-busy="true"] { animation: respiro 1.2s ease-in-out infinite; }
@@ -73,16 +74,19 @@
 /* ───────── Barra in basso: tasti fisici ───────── */
 /* Toccando una sezione il suo tasto scende e resta giù, quello di prima torna su. Niente che scorre. */
 .tab, .tasto-cta {
-  transition: box-shadow .22s var(--ease), color .22s var(--ease), background-color .22s var(--ease);
+  transition: box-shadow .22s var(--ease), background-color .22s var(--ease), color .22s var(--ease);
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
 }
-.tab svg, .tab span, .tasto-cta svg { transition: transform .22s var(--ease); }
+.tab svg, .tab span { transition: transform .22s var(--ease); }
 .tab[aria-current="page"] svg, .tab[aria-current="page"] span { transform: translateY(1px); }
-.tab[data-js-premuto] { box-shadow: var(--in2); transform: none; transition-duration: var(--dur-premi); }
+.tab[data-js-premuto] { background: var(--grigio); box-shadow: var(--in2); transition-duration: var(--dur-premi); }
 .tab[data-js-premuto] svg, .tab[data-js-premuto] span { transform: translateY(1px); }
 /* Il disco affonda come un tasto, e il + ruota di un quarto quando lo premi */
-.tasto-cta[data-js-premuto] { box-shadow: var(--in-premuto); transition-duration: var(--dur-premi); }
-.tasto-cta[data-js-premuto] svg { transform: translateY(1px) rotate(90deg) scale(.92); }
+.tasto-cta[data-js-premuto] { background: var(--grigio); box-shadow: var(--in2); transition-duration: var(--dur-premi); }
 .tasto-cta svg { transition: transform var(--dur-rilascio) var(--molla); }
+.tasto-cta[data-js-premuto] svg { transform: translateY(1px) rotate(90deg) scale(.92); }
 
 /* ───────── Ingressi ───────── */
 /* Capi e outfit che compaiono dopo un filtro o una ricerca; gli slot cambiati da Genera */

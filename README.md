@@ -5,8 +5,9 @@ Un solo utente, pensata per il telefono e installabile sulla schermata Home.
 
 - **Frontend**: Vite + JavaScript senza framework, pubblicato su GitHub Pages da GitHub Actions a ogni push su `main`.
 - **Backend**: un progetto Supabase dedicato, piano gratuito (Postgres, Storage, Auth). Nessun server proprio.
-- **Stile**: soft UI leggera solo sui comandi (ricerca, chip, pulsanti, tab bar); foto e contenuti piatti.
-  Gesso `#F2F2F1`, corallo `#D2413A` come unico accento, font Inter. Token in `src/stile/tokens.css`.
+- **Stile**: pulito come Airbnb (fondo bianco, foto protagoniste, titoli grandi, schede con la foto in alto e il
+  pannello bianco sopra), con pochi elementi soft che sembrano tasti fisici: barra di navigazione, disco +, pulsanti
+  principali, chip, ricerca e lucchetti. Corallo `#D2413A` come unico accento, font Inter. Token in `src/stile/tokens.css`.
 - La proposta iniziale (schizzo, token, schema) è in `docs/proposta.html`.
 
 ## Passi manuali, una volta sola
