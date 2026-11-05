@@ -1,7 +1,7 @@
 {
   "name": "Armadio",
   "short_name": "Armadio",
-  "description": "Il mio armadio: capi, outfit e cosa manca",
+  "description": "Il mio armadio: capi e outfit",
   "lang": "it",
   "start_url": "./",
   "scope": "./",

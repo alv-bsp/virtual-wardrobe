@@ -1,6 +1,6 @@
 # Armadio
 
-Webapp personale per catalogare i miei vestiti, comporre outfit e capire cosa manca nel guardaroba.
+Webapp personale per catalogare i miei vestiti e comporre outfit.
 Un solo utente, pensata per il telefono e installabile sulla schermata Home.
 
 - **Frontend**: Vite + JavaScript senza framework, pubblicato su GitHub Pages da GitHub Actions a ogni push su `main`.
@@ -84,7 +84,7 @@ src/supabase.js          client Supabase
 src/stato.js             stato in memoria
 src/dati.js              lettura dei dati dopo il login
 src/accesso.js           login e logout
-src/router.js            routing a hash: #/armadio, #/outfit, #/manca
+src/router.js            routing a hash: #/armadio, #/outfit, #/capo/…, #/outfit/…
 src/viste/               una vista per sezione, più accesso e account
 src/ui/                  template HTML con escape, icone, toast e fogli
 src/stile/               token, base e componenti
@@ -116,7 +116,7 @@ rompere i capi che la usano: `attiva = false`. Per toglierla del tutto, anche da
 - **Niente service worker**: l'offline non è richiesto, e così non c'è una cache da invalidare a ogni rilascio.
 - **Niente colore d'errore separato**: l'accento è già corallo; le azioni distruttive sono pulsanti neutri con
   conferma.
-- **Dati in memoria**: dopo il login si carica tutto; filtri, ricerca e Cosa manca girano nel browser.
+- **Dati in memoria**: dopo il login si carica tutto; filtri, ricerca e generatore girano nel browser.
 - **Generatore di outfit a regole, non AI** (`src/outfit.js`). Un capo per strato: giacca, maglia, sopra, sotto,
   scarpe, accessori; lo strato si ricava dalla categoria. Sopra, sotto e scarpe ci sono sempre; giacca e maglia
   dipendono dalla stagione più fredda scelta (sempre in inverno, mai in estate, a volte nelle mezze stagioni);
@@ -129,7 +129,8 @@ rompere i capi che la usano: `attiva = false`. Per toglierla del tutto, anche da
 - [x] 1. Scaffold, login, deploy
 - [x] 2. Capi con foto: griglia con filtri e ricerca, aggiunta da fotocamera o galleria, scheda, modifica, eliminazione
 - [x] 3. Outfit: compositore con Genera, blocchi e scelta per strato, elenco con preferiti, outfit nella scheda del capo
-- [ ] 4. Cosa manca
+- [ ] 4. Cosa manca: tolta per ora (5 novembre 2026), la sezione non serve. Il conteggio di quante volte
+  ogni capo compare negli outfit resta, e serve al generatore.
 - [ ] 5. Rifinitura UI e installazione su Home
 
 ## Licenze

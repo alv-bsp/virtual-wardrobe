@@ -1,9 +1,9 @@
 // Routing a hash: su GitHub Pages non serve nessun ripiego lato server.
-//   #/armadio · #/outfit · #/manca          le tre sezioni della tab bar
+//   #/armadio · #/outfit                    le due sezioni della barra in basso
 //   #/nuovo                                 aggiunta di un capo
 //   #/capo/<id> · #/capo/<id>/modifica      scheda e modifica di un capo
 //   #/outfit/nuovo · #/outfit/<id> · #/outfit/<id>/modifica
-export const SEZIONI = ["armadio", "outfit", "manca"];
+export const SEZIONI = ["armadio", "outfit"];
 const PAGINE = [...SEZIONI, "nuovo", "capo"];
 
 export function rotta() {

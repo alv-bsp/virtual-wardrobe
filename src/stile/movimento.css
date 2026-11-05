@@ -28,7 +28,7 @@
   transition-timing-function: ease-out;
 }
 .btn[data-js-premuto] { transform: scale(.965); box-shadow: var(--in-premuto); }
-.btn.primario[data-js-premuto] { transform: scale(.97); box-shadow: var(--corallo-giu); }
+.btn.primario[data-js-premuto] { transform: scale(.97); box-shadow: var(--in-premuto); }
 .chip[data-js-premuto] { transform: scale(.95); box-shadow: var(--in-premuto); }
 .icona-btn[data-js-premuto] { transform: scale(.9); box-shadow: var(--in-premuto); }
 .foto.vuota[data-js-premuto] { transform: scale(.97); }
@@ -75,12 +75,14 @@
 .tab, .tasto-cta {
   transition: box-shadow .22s var(--ease), color .22s var(--ease), background-color .22s var(--ease);
 }
-.tab svg, .tab span, .tasto-cta svg, .tasto-cta span { transition: transform .22s var(--ease); }
+.tab svg, .tab span, .tasto-cta svg { transition: transform .22s var(--ease); }
 .tab[aria-current="page"] svg, .tab[aria-current="page"] span { transform: translateY(1px); }
 .tab[data-js-premuto] { box-shadow: var(--in2); transform: none; transition-duration: var(--dur-premi); }
 .tab[data-js-premuto] svg, .tab[data-js-premuto] span { transform: translateY(1px); }
-.tasto-cta[data-js-premuto] { box-shadow: var(--corallo-giu); transition-duration: var(--dur-premi); }
-.tasto-cta[data-js-premuto] svg, .tasto-cta[data-js-premuto] span { transform: translateY(1px); }
+/* Il disco affonda come un tasto, e il + ruota di un quarto quando lo premi */
+.tasto-cta[data-js-premuto] { box-shadow: var(--in-premuto); transition-duration: var(--dur-premi); }
+.tasto-cta[data-js-premuto] svg { transform: translateY(1px) rotate(90deg) scale(.92); }
+.tasto-cta svg { transition: transform var(--dur-rilascio) var(--molla); }
 
 /* ───────── Ingressi ───────── */
 /* Capi e outfit che compaiono dopo un filtro o una ricerca; gli slot cambiati da Genera */

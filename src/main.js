@@ -9,7 +9,7 @@ import { stato, aggiorna, ascolta, azzeraDati } from "./stato.js";
 import { caricaTutto } from "./dati.js";
 import { idrataFoto } from "./foto.js";
 import { esci } from "./accesso.js";
-import { rotta, normalizza, vai, SEZIONI } from "./router.js";
+import { rotta, normalizza, vai } from "./router.js";
 import { html } from "./ui/html.js";
 import { icona } from "./ui/icone.js";
 import { apriFoglio, chiudiFoglio, chiudiFoglioSubito, preparaFoglio } from "./ui/avvisi.js";
@@ -18,7 +18,6 @@ import { preparaTocco, transizione, anima } from "./ui/tocco.js";
 import { avviso } from "./viste/comuni.js";
 import * as armadio from "./viste/armadio.js";
 import * as outfit from "./viste/outfit.js";
-import * as manca from "./viste/manca.js";
 import * as capo from "./viste/capo.js";
 import * as editor from "./viste/editor.js";
 import * as compositore from "./viste/compositore.js";
@@ -28,9 +27,8 @@ import * as accesso from "./viste/accesso.js";
 import * as account from "./viste/account.js";
 
 const TAB = {
-  armadio: { etichetta: "Armadio", icona: "shirt" },
+  armadio: { etichetta: "Armadio", icona: "hanger" },
   outfit: { etichetta: "Outfit", icona: "layers" },
-  manca: { etichetta: "Cosa manca", icona: "pie" },
 };
 const app = document.getElementById("app");
 const sceltaFoto = document.getElementById("scegli-foto");
@@ -41,7 +39,7 @@ function vistaPer(r) {
   if (r.nome === "outfit" && r.param[0]) {
     return r.param[0] === "nuovo" || r.param[1] === "modifica" ? compositore : outfitDettaglio;
   }
-  return { armadio, outfit, manca }[r.nome];
+  return { armadio, outfit }[r.nome];
 }
 
 // ───────────────────────────────────────── disegno
@@ -58,24 +56,27 @@ function guscio() {
     ${v.conTabbar ? barraInBasso(r) : ""}`;
 }
 
-// L'azione principale sta nella barra, come quarto tasto: in Outfit genera, altrove aggiunge un capo.
+// L'azione principale è il disco al centro della barra: in Outfit crea un outfit nuovo (già generato),
+// altrove aggiunge un capo.
 const CTA = {
-  outfit: { azione: "nuovo-outfit", icona: "shuffle", etichetta: "Genera", aria: "Genera un nuovo outfit" },
-  altro: { azione: "aggiungi-capo", icona: "plus", etichetta: "Aggiungi", aria: "Aggiungi un capo" },
+  outfit: { azione: "nuovo-outfit", aria: "Nuovo outfit" },
+  altro: { azione: "aggiungi-capo", aria: "Aggiungi un capo" },
 };
 
 function barraInBasso(r) {
   const cta = CTA[r.sezione] || CTA.altro;
+  const tab = (nome) => html`
+    <a class="tab" href="#/${nome}" ${r.sezione === nome ? html`aria-current="page"` : ""}>
+      ${icona(TAB[nome].icona, 21)}<span>${TAB[nome].etichetta}</span>
+    </a>`;
   return html`
     <nav class="tabbar" data-key="tabbar" aria-label="Sezioni">
       <div class="tabbar-tasti">
-        ${SEZIONI.map((nome) => html`
-          <a class="tab" href="#/${nome}" ${r.sezione === nome ? html`aria-current="page"` : ""}>
-            ${icona(TAB[nome].icona, 22)}<span>${TAB[nome].etichetta}</span>
-          </a>`)}
-        <button class="tasto-cta" type="button" data-azione="${cta.azione}" aria-label="${cta.aria}">
-          ${icona(cta.icona, 22, 2.2)}<span aria-hidden="true">${cta.etichetta}</span>
+        ${tab("armadio")}
+        <button class="tasto-cta" type="button" data-azione="${cta.azione}" aria-label="${cta.aria}" title="${cta.aria}">
+          ${icona("plus", 26, 2.4)}
         </button>
+        ${tab("outfit")}
       </div>
     </nav>`;
 }

@@ -49,12 +49,14 @@
   transition: box-shadow var(--dur) var(--ease), opacity var(--dur) var(--ease);
 }
 .btn:active { box-shadow: var(--in1); }
+/* Il pulsante principale è dello stesso materiale della UI: più in rilievo degli altri, testo e icona corallo */
 .btn.primario {
-  background: var(--accent);
-  color: var(--on-accent);
-  box-shadow: var(--corallo-su);
+  color: var(--accent-text);
+  font-weight: 650;
+  box-shadow: var(--e-cta);
 }
-.btn.primario:active { box-shadow: var(--corallo-giu); }
+.btn.primario svg { color: var(--accent); }
+.btn.primario:active { box-shadow: var(--in2); }
 .btn.largo { width: 100%; }
 .btn[disabled], .btn[aria-busy="true"] { opacity: .6; cursor: default; }
 
@@ -125,8 +127,10 @@
 .campo input::placeholder { color: var(--ink-2); }
 
 /* ───────── Barra in basso: agganciata al fondo, taglio netto in alto ───────── */
-/* Fondo pieno e un filo in alto: i contenuti finiscono contro un bordo, senza aloni né sfumature.
-   Dentro, tasti fisici: la sezione attiva resta premuta, il tasto corallo è l'azione principale. */
+/* Fondo pieno e un filo in alto: i contenuti finiscono contro un bordo, senza aloni né sfumature
+   (overflow: hidden tiene anche le ombre dei tasti dentro la barra).
+   Dentro, tasti fisici: Armadio e Outfit ai lati, la sezione attiva resta premuta; al centro il disco
+   dell'azione principale, come l'icona dell'app. */
 .tabbar {
   position: fixed;
   z-index: 20;
@@ -139,44 +143,46 @@
   background: var(--base);
   border-top: 1px solid var(--line);
   box-shadow: inset 0 1px 0 var(--sh-light);
+  overflow: hidden;
 }
 .tabbar-tasti {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.1fr);
-  gap: 10px;
-  max-width: 560px;
+  grid-template-columns: minmax(0, 1fr) var(--tasto-h) minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  max-width: 430px;
   margin: 0 auto;
 }
-.tab, .tasto-cta {
+.tab {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  height: var(--tasto-h);
-  border: 0;
+  gap: 8px;
+  height: 50px;
   border-radius: 16px;
-  font-size: 12px;
-  font-weight: 550;
-  letter-spacing: -.005em;
-  text-decoration: none;
-}
-.tab {
   background: var(--base);
   color: var(--ink-2);
   box-shadow: var(--e1);
+  font-size: var(--t-sm);
+  font-weight: 550;
+  letter-spacing: -.01em;
+  text-decoration: none;
 }
 .tab[aria-current="page"] {
   box-shadow: var(--in2);
-  color: var(--accent-text);
-  font-weight: 600;
-}
-.tab[aria-current="page"] svg { color: var(--accent); }
-.tasto-cta {
-  background: var(--accent);
-  color: var(--on-accent);
+  color: var(--ink);
   font-weight: 650;
-  box-shadow: var(--corallo-su);
+}
+.tasto-cta {
+  display: grid;
+  place-items: center;
+  width: var(--tasto-h);
+  height: var(--tasto-h);
+  border: 0;
+  border-radius: 50%;
+  background: var(--base);
+  color: var(--accent);
+  box-shadow: var(--e-cta);
 }
 
 /* ───────── Stati vuoti e avvisi ───────── */
@@ -501,8 +507,9 @@ details.gruppo[open] summary::before { content: "−"; }
   background: var(--base);
   border-top: 1px solid var(--line);
   box-shadow: inset 0 1px 0 var(--sh-light);
+  overflow: hidden;
 }
-.barra-salva .btn { display: flex; max-width: 688px; height: var(--tasto-h); margin: 0 auto; box-shadow: var(--corallo-su); }
+.barra-salva .btn { display: flex; max-width: 688px; height: var(--tasto-h); margin: 0 auto; border-radius: 18px; }
 
 /* ───────── Fogli: gruppi e azioni ───────── */
 .foglio .gruppo { margin-bottom: var(--s5); }
