@@ -32,8 +32,8 @@ button { cursor: pointer; }
 a { color: inherit; }
 svg { display: block; flex: none; }
 
-:focus { outline: none; }
-:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* Nessun contorno di focus: l'app la usa una persona sola, col dito */
+:focus, :focus-visible { outline: none; }
 
 .sr {
   position: absolute; width: 1px; height: 1px; overflow: hidden;

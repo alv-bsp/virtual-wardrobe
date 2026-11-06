@@ -167,7 +167,6 @@
   box-shadow: var(--e2);
   color: var(--ink);
 }
-.cerca:focus-within { outline: 2px solid var(--ink); outline-offset: 2px; }
 .cerca input {
   flex: 1;
   min-width: 0;
@@ -181,7 +180,6 @@
   appearance: none;
 }
 .cerca input::placeholder { color: var(--ink-2); font-weight: 500; }
-.cerca input:focus-visible { outline: none; }
 
 /* ───────── Campi: bordo sottile, come i form di Airbnb ───────── */
 .campo { display: grid; gap: 8px; }
@@ -200,7 +198,7 @@
 .campo input { height: 56px; padding: 0 16px; }
 .campo textarea { min-height: 96px; padding: 14px 16px; line-height: 1.45; resize: vertical; }
 .campo input::placeholder, .campo textarea::placeholder { color: var(--ink-2); }
-.campo input:focus, .campo textarea:focus { outline: none; border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.campo input:focus, .campo textarea:focus { outline: none; }
 
 /* ───────── Barra in basso: agganciata al fondo, taglio netto in alto ───────── */
 /* Fondo bianco e un filo in alto, come la tab bar di Airbnb. Dentro, i soli tasti soft della navigazione:
@@ -605,7 +603,21 @@
 .etichetta { margin-bottom: var(--s2); font-size: var(--t-md); font-weight: 650; }
 .etichetta.separata { margin-top: var(--s5); }
 .scelta-capo { width: 100%; padding: 0; border: 0; background: none; color: inherit; text-align: left; }
-.scelta-capo[aria-pressed="true"] .foto { outline: 3px solid var(--ink); outline-offset: 2px; }
+.scelta-capo { position: relative; }
+/* Il capo già nello slot: una spunta bianca su un cerchio corallo nell'angolo, niente bordi */
+.scelta-capo .spunta {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+}
 .scelta-capo[aria-pressed="true"] .tessera-nome { font-weight: 700; }
 [data-azione="preferito"][aria-pressed="true"] svg,
 [data-azione="preferito-bozza"][aria-pressed="true"] svg { fill: currentColor; }

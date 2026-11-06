@@ -40,7 +40,7 @@
 
 /* Contenuti piatti toccabili: si stringono appena */
 .tessera .foto, .tessera-outfit .collage, .scelta-capo .foto {
-  transition: transform var(--dur-rilascio) var(--molla), outline-color var(--dur-stato) var(--ease);
+  transition: transform var(--dur-rilascio) var(--molla);
 }
 :is(.tessera, .scelta-capo)[data-js-premuto] .foto,
 .tessera-outfit[data-js-premuto] .collage { transform: scale(.96); transition-duration: var(--dur-premi); }

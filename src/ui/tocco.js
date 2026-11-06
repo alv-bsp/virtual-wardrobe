@@ -7,6 +7,9 @@ export const movimentoRidotto = () => matchMedia("(prefers-reduced-motion: reduc
 const PREMIBILI = ".btn, .chip, .icona-btn, .tab, .tasto-cta, .tondo-foto, .tessera, .tessera-outfit, .slot-scelta, .riga-outfit, .indietro, .link, .scelta-capo, .foto.vuota";
 const DURATA_MINIMA = 120; // ms: anche un tocco velocissimo si vede
 
+/** Indirizzi delle foto già arrivate: ridisegnandole (es. tornando ad Armadio) si mostrano subito, senza dissolvenza. */
+export const fotoArrivate = new Set();
+
 export function preparaTocco() {
   document.addEventListener("pointerdown", (e) => {
     if (e.button > 0) return;
@@ -26,7 +29,9 @@ export function preparaTocco() {
 
   // Le foto entrano in dissolvenza appena arrivano, invece di comparire di colpo.
   document.addEventListener("load", (e) => {
-    if (e.target.tagName === "IMG") e.target.setAttribute("data-js-caricata", "");
+    if (e.target.tagName !== "IMG") return;
+    e.target.setAttribute("data-js-caricata", "");
+    fotoArrivate.add(e.target.getAttribute("src"));
   }, true);
   document.addEventListener("error", (e) => {
     if (e.target.tagName === "IMG") e.target.closest(".foto")?.setAttribute("data-js-errore", "");

@@ -34,7 +34,7 @@ export function render(s, { rotta, avviso = "" }) {
           aria-label="${o.preferito ? "Togli dai preferiti" : "Aggiungi ai preferiti"}">${icona("heart", 19, 2)}</button>
       </div>
       <div class="pannello">
-        <h1 tabindex="-1">${nomeOutfit(o, capi)}</h1>
+        <h1>${nomeOutfit(o, capi)}</h1>
         <p class="sotto">${descriviOutfit(o) || (capi.length === 1 ? "1 capo" : `${capi.length} capi`)}</p>
         ${avviso}
         ${o.note ? html`<p class="note-outfit">${o.note}</p>` : ""}

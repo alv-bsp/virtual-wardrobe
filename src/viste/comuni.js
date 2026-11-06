@@ -2,17 +2,18 @@ import { html } from "../ui/html.js";
 import { icona } from "../ui/icone.js";
 import { hexColore, nomeVoce, nomeCapo } from "../voci.js";
 import { urlInCache } from "../foto.js";
+import { fotoArrivate } from "../ui/tocco.js";
 import { SLOT, slotDi } from "../outfit.js";
 
-/** Titolo della sezione con il pulsante Account a destra. */
+/** Titolo della sezione con le impostazioni a destra. */
 export function testata(titolo, sotto = "") {
   return html`
     <header class="testata">
       <div>
-        <h1 tabindex="-1">${titolo}</h1>
+        <h1>${titolo}</h1>
         ${sotto ? html`<p class="sotto">${sotto}</p>` : ""}
       </div>
-      <button class="icona-btn" type="button" data-azione="account" aria-label="Account">${icona("user")}</button>
+      <button class="icona-btn" type="button" data-azione="account" aria-label="Impostazioni">${icona("settings", 21, 1.9)}</button>
     </header>`;
 }
 
@@ -21,7 +22,7 @@ export function barra({ indietro, href, azione = "", titolo = "" }) {
   return html`
     <header class="barra">
       <a class="icona-btn indietro" href="${href}" aria-label="${indietro}">${icona(indietro === "Annulla" ? "x" : "arrow-left", 20)}</a>
-      ${titolo ? html`<h1 class="barra-titolo" tabindex="-1">${titolo}</h1>` : html`<span aria-hidden="true"></span>`}
+      ${titolo ? html`<h1 class="barra-titolo">${titolo}</h1>` : html`<span aria-hidden="true"></span>`}
       <div class="barra-azione">${azione}</div>
     </header>`;
 }
@@ -56,11 +57,17 @@ export function pallino(slug) {
     : html`<span class="pallino fantasia" aria-hidden="true"></span>`;
 }
 
-/** Foto del capo: l'indirizzo firmato arriva dopo (idrataFoto), se non è già in memoria. */
+/**
+ * Foto del capo: l'indirizzo firmato arriva dopo (idrataFoto), se non è già in memoria.
+ * La prima volta la foto entra in dissolvenza; se è già arrivata prima (cambiando sezione) compare subito,
+ * altrimenti ogni ritorno ad Armadio o Outfit farebbe lampeggiare tutte le foto.
+ */
 export function foto(percorso, { classe = "", alt = "" } = {}) {
   if (!percorso) return html`<div class="foto senza ${classe}">${icona("hanger", 30, 1.5)}</div>`;
   const src = urlInCache(percorso);
-  return html`<div class="foto ${classe}"><img data-foto="${percorso}" ${src ? html`src="${src}"` : ""} alt="${alt}" decoding="async"></div>`;
+  const giaArrivata = src && fotoArrivate.has(src);
+  return html`<div class="foto ${classe}"><img data-foto="${percorso}" ${src ? html`src="${src}"` : ""} alt="${alt}"
+    ${giaArrivata ? html`data-js-caricata decoding="sync"` : html`decoding="async"`}></div>`;
 }
 
 export const etichettaStato = (s) => (s === "armadio" ? "" : nomeVoce("stato", s));

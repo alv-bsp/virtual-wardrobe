@@ -33,7 +33,7 @@ export function render(s, { rotta, avviso = "" }) {
         <a class="tondo-foto destra" href="#/capo/${c.id}/modifica" aria-label="Modifica il capo">${icona("pencil", 18)}</a>
       </div>
       <div class="pannello">
-        <h1 tabindex="-1">${nomeCapo(c)}</h1>
+        <h1>${nomeCapo(c)}</h1>
         <p class="sotto">${nomeVoce("categoria", c.categoria)}${c.marca ? ` · ${c.marca}` : ""}</p>
         ${stato ? html`<div class="etichetta-centro"><span class="etichetta-stato">${stato}</span></div>` : ""}
         ${avviso}

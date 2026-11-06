@@ -11,7 +11,7 @@
   --photo-bg: #EEEEEE;      /* fondo dietro le foto e celle vuote dei collage */
   --line: #EBEBEB;          /* filetti decorativi */
   --bordo-campo: #929292;   /* bordo dei campi · 3,1:1 */
-  --ink: #222222;           /* testo e anello di focus · 15,9:1 */
+  --ink: #222222;           /* testo · 15,9:1 */
   --ink-2: #6A6A6A;         /* testo secondario e segnaposto · 5,4:1 (4,8:1 sul grigio) */
   --accent: #D2413A;        /* corallo: icone e contatori · 4,6:1 */
   --accent-text: #C4372F;   /* corallo per il testo · 5,3:1 (4,8:1 sul grigio) */

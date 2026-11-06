@@ -7,7 +7,7 @@ export function render(s) {
   return html`
     <div class="maniglia" aria-hidden="true"></div>
     <div class="foglio-testa">
-      <h2 id="foglio-titolo">Account</h2>
+      <h2 id="foglio-titolo">Impostazioni</h2>
       <button class="icona-btn" type="button" data-azione="chiudi-foglio" aria-label="Chiudi">${icona("x")}</button>
     </div>
     <dl class="righe">

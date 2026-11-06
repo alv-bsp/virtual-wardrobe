@@ -197,7 +197,6 @@ window.addEventListener("hashchange", () => {
     disegna();
     window.scrollTo(0, 0);
   });
-  document.querySelector("#vista h1")?.focus({ preventScroll: true });
 });
 
 // ───────────────────────────────────────── avvio

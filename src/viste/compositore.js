@@ -214,6 +214,7 @@ function scelta(slotId) {
     <li>
       <button class="tessera scelta-capo" type="button" data-azione="metti-in-slot" data-slot="${slotId}" data-capo="${c.id}" aria-pressed="${b.slot[slotId] === c.id}">
         ${foto(c.miniatura)}
+        ${b.slot[slotId] === c.id ? html`<span class="spunta">${icona("check", 15, 3)}</span>` : ""}
         <span class="tessera-nome">${nomeCapo(c)}</span>
       </button>
     </li>`;
