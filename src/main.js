@@ -74,7 +74,7 @@ function barraInBasso(r) {
       <div class="tabbar-tasti">
         ${tab("armadio")}
         <button class="tasto-cta" type="button" data-azione="${cta.azione}" aria-label="${cta.aria}" title="${cta.aria}">
-          ${icona("plus", 26, 2.4)}
+          <span class="incisa">${icona("plus", 26, 2.6)}</span>
         </button>
         ${tab("outfit")}
       </div>
@@ -111,12 +111,7 @@ function disegna() {
   else app.innerHTML = String(contenuto);
   app.dataset.vista = nome;
 
-  if (nome === "app") {
-    idrataFoto(app);
-    // Da qui in poi i capi e gli slot che compaiono (filtri, Genera) entrano con un'animazione.
-    const vista = document.getElementById("vista");
-    if (vista && !vista.hasAttribute("data-js-montato")) requestAnimationFrame(() => vista.setAttribute("data-js-montato", ""));
-  }
+  if (nome === "app") idrataFoto(app);
 }
 
 /** Profondità di una pagina: sezioni 0, schede 1, modifiche 2. Decide il verso della transizione. */

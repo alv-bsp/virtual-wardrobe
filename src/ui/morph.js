@@ -9,6 +9,8 @@
 // - <img> tiene il src già assegnato se il percorso della foto (data-foto) non è cambiato
 // - <details> tiene aperto/chiuso come l'ha lasciato chi tocca
 // - un campo con il fuoco tiene il suo valore
+// - un elemento aggiunto in un contenitore che c'era già riceve data-js-nuovo: il CSS può animarne
+//   l'ingresso (una tessera che compare dopo un filtro) senza far ripartire gli elementi rimasti
 
 export function morph(radice, nuovoHtml) {
   const t = document.createElement("template");
@@ -53,6 +55,7 @@ function aggiornaFigli(vecchio, nuovo) {
       aggiornaNodo(abbinato, n);
       finali.push(abbinato);
     } else {
+      if (n.nodeType === 1 && vecchio.isConnected) n.setAttribute("data-js-nuovo", "");
       finali.push(n);
     }
   }

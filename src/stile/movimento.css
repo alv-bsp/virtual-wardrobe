@@ -84,15 +84,17 @@
 .tab[data-js-premuto] { background: var(--grigio); box-shadow: var(--in2); transition-duration: var(--dur-premi); }
 .tab[data-js-premuto] svg, .tab[data-js-premuto] span { transform: translateY(1px); }
 /* Il disco affonda come un tasto, e il + ruota di un quarto quando lo premi */
-.tasto-cta[data-js-premuto] { background: var(--grigio); box-shadow: var(--in2); transition-duration: var(--dur-premi); }
+.tasto-cta[data-js-premuto] { box-shadow: var(--cta-giu); transition-duration: var(--dur-premi); }
 .tasto-cta svg { transition: transform var(--dur-rilascio) var(--molla); }
 .tasto-cta[data-js-premuto] svg { transform: translateY(1px) rotate(90deg) scale(.92); }
 
 /* ───────── Ingressi ───────── */
-/* Capi e outfit che compaiono dopo un filtro o una ricerca; gli slot cambiati da Genera */
-#vista[data-js-montato] :is(.griglia, .griglia-outfit) > li { animation: entra-tessera .34s var(--morbido) both; animation-delay: calc(var(--n, 0) * 22ms); }
+/* Capi e outfit che compaiono dopo un filtro o una ricerca; gli slot cambiati da Genera.
+   Solo gli elementi davvero nuovi (data-js-nuovo, messo da morph): quelli già sullo schermo non ripartono,
+   altrimenti a ogni pagina le tessere sparirebbero un attimo dopo essere comparse. */
+:is(.griglia, .griglia-outfit) > li[data-js-nuovo] { animation: entra-tessera .34s var(--morbido) both; animation-delay: calc(var(--n, 0) * 22ms); }
 @keyframes entra-tessera { from { transform: scale(.92) translateY(6px); opacity: 0; } }
-#vista[data-js-montato] .slot-scelta { animation: entra-slot .36s var(--morbido) both; animation-delay: calc(var(--n, 0) * 45ms); }
+.slot-scelta[data-js-nuovo] { animation: entra-slot .36s var(--morbido) both; animation-delay: calc(var(--n, 0) * 45ms); }
 @keyframes entra-slot { from { transform: translateX(14px); opacity: 0; } }
 
 /* Le foto entrano in dissolvenza quando arrivano */

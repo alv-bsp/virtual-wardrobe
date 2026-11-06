@@ -248,6 +248,7 @@
   color: var(--ink);
   font-weight: 650;
 }
+/* Il disco + è l'unico pieno: corallo convesso con il + bianco inciso dentro */
 .tasto-cta {
   display: grid;
   place-items: center;
@@ -255,9 +256,16 @@
   height: var(--tasto-h);
   border: 0;
   border-radius: 50%;
-  background: var(--base);
-  color: var(--accent);
-  box-shadow: var(--e2);
+  background: radial-gradient(120% 120% at 30% 25%, #E0544C 0%, var(--accent) 48%, #BD352E 100%);
+  color: var(--on-accent);
+  box-shadow: var(--cta-su);
+}
+/* Il + sembra scavato nel tasto: ombra rosso scuro sul bordo alto, luce rosata su quello basso.
+   Il filtro sta sul contenitore, così luce e ombra restano ferme anche quando il + ruota. */
+.tasto-cta .incisa {
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 -1px 0 rgba(112, 18, 13, .62)) drop-shadow(0 1px 0 rgba(255, 205, 198, .55));
 }
 
 /* Barra delle azioni in basso (Salva, Modifica…): stessa base, come la barra di "Reserve" */
