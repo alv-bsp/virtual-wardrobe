@@ -2,6 +2,7 @@ import "./stile/tokens.css";
 import "./stile/base.css";
 import "./stile/componenti.css";
 import "./stile/movimento.css";
+import "./stile/tavolo.css";
 
 import { configurato } from "./config.js";
 import { sb } from "./supabase.js";
@@ -14,13 +15,13 @@ import { html } from "./ui/html.js";
 import { icona } from "./ui/icone.js";
 import { apriFoglio, chiudiFoglio, chiudiFoglioSubito, preparaFoglio } from "./ui/avvisi.js";
 import { morph } from "./ui/morph.js";
-import { preparaTocco, transizione, anima } from "./ui/tocco.js";
+import { preparaTocco, transizione } from "./ui/tocco.js";
 import { avviso } from "./viste/comuni.js";
 import * as armadio from "./viste/armadio.js";
 import * as outfit from "./viste/outfit.js";
 import * as capo from "./viste/capo.js";
 import * as editor from "./viste/editor.js";
-import * as compositore from "./viste/compositore.js";
+import * as tavolo from "./viste/tavolo.js";
 import * as outfitDettaglio from "./viste/outfit-dettaglio.js";
 import * as filtri from "./viste/filtri.js";
 import * as accesso from "./viste/accesso.js";
@@ -37,7 +38,7 @@ function vistaPer(r) {
   if (r.nome === "nuovo") return editor;
   if (r.nome === "capo") return r.param[1] === "modifica" ? editor : capo;
   if (r.nome === "outfit" && r.param[0]) {
-    return r.param[0] === "nuovo" || r.param[1] === "modifica" ? compositore : outfitDettaglio;
+    return r.param[0] === "nuovo" || r.param[1] === "modifica" ? tavolo : outfitDettaglio;
   }
   return { armadio, outfit }[r.nome];
 }
@@ -52,7 +53,7 @@ function guscio() {
   // restando sulla stessa pagina si aggiorna solo quello che cambia. Tab bar e pulsante principale restano.
   const pagina = [r.nome, ...r.param].join("/");
   return html`
-    <main class="vista ${v.conTabbar ? "" : "senza-tabbar"}" id="vista" data-key="vista:${pagina}">${contenuto}</main>
+    <main class="vista ${v.conTabbar ? "" : "senza-tabbar"} ${v.classeVista || ""}" id="vista" data-key="vista:${pagina}">${contenuto}</main>
     ${v.conTabbar ? barraInBasso(r) : ""}`;
 }
 
@@ -111,7 +112,10 @@ function disegna() {
   else app.innerHTML = String(contenuto);
   app.dataset.vista = nome;
 
-  if (nome === "app") idrataFoto(app);
+  if (nome === "app") {
+    idrataFoto(app);
+    vistaPer(rotta()).monta?.(app); // il tavolo degli outfit si aggancia alla pagina appena disegnata
+  }
 }
 
 /** Profondità di una pagina: sezioni 0, schede 1, modifiche 2. Decide il verso della transizione. */
@@ -130,15 +134,11 @@ const AZIONI = {
   ...capo.azioni,
   ...outfit.azioni,
   ...outfitDettaglio.azioni,
-  ...compositore.azioni,
+  ...tavolo.azioni,
   "aggiungi-capo": () => { modoFoto = "nuovo"; sceltaFoto.click(); },
   "scegli-foto": () => { modoFoto = "cambia"; sceltaFoto.click(); },
-  "nuovo-outfit": () => { compositore.nuovoOutfit(); vai("outfit/nuovo"); },
-  genera: (el) => {
-    anima(el.querySelector("svg"), [{ transform: "rotate(0)" }, { transform: "rotate(180deg) scale(1.15)" }, { transform: "rotate(360deg)" }], { duration: 520 });
-    compositore.azioni.genera(el);
-  },
-  "componi-con": (el) => { compositore.componiCon(el.dataset.id); vai("outfit/nuovo"); },
+  "nuovo-outfit": () => { tavolo.nuovoOutfit(); vai("outfit/nuovo"); },
+  "componi-con": (el) => { tavolo.componiCon(el.dataset.id); vai("outfit/nuovo"); },
   account: () => apriFoglio(account.render(stato)),
   "chiudi-foglio": chiudiFoglio,
   riprova: () => caricaTutto(),
@@ -148,7 +148,7 @@ const AZIONI = {
   },
 };
 
-const INPUT = { ...armadio.input, ...editor.input, ...compositore.input };
+const INPUT = { ...armadio.input, ...editor.input, ...tavolo.input };
 
 document.addEventListener("click", (e) => {
   const el = e.target.closest("[data-azione]");

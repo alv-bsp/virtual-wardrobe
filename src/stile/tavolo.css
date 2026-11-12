@@ -1,0 +1,284 @@
+/* Armadio · tavolo degli outfit
+   Un piano grigio chiaro a puntini, incassato come un vassoio; sopra, i capi come foto-adesivo bianche che si
+   sollevano quando le prendi. Sotto, il cassetto con tutto l'armadio. */
+
+/* La pagina occupa lo schermo e non scorre: si scorre solo il cassetto, in orizzontale. */
+html:has(.vista-tavolo), body:has(.vista-tavolo) { overflow: hidden; overscroll-behavior: none; }
+.vista.vista-tavolo {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+.tavolo-pagina { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+.tavolo-pagina .barra { margin-bottom: 0; }
+
+.contesto-tavolo {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: 6px;
+  max-width: 100%;
+  min-height: 32px;
+  margin: 2px 0 10px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--grigio);
+  color: var(--ink-2);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.contesto-tavolo span { overflow: hidden; text-overflow: ellipsis; }
+
+/* ───────── Il piano ───────── */
+.tavolo-cornice {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin: 0 calc(-1 * var(--s2));
+  border-radius: var(--r-lg);
+  background-color: #F6F6F6;
+  background-image: radial-gradient(circle, rgba(0, 0, 0, .1) 1.1px, transparent 1.5px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04), inset 0 2px 8px rgba(0, 0, 0, .06);
+}
+.tavolo {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: background-color var(--dur-stato) var(--ease);
+}
+.tavolo.in-arrivo { background-color: rgba(210, 65, 58, .035); }
+
+.tavolo-suggerimento {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0 var(--s6);
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+  line-height: 1.45;
+  text-align: center;
+  pointer-events: none;
+  animation: compare .4s var(--morbido) .5s both;
+}
+@keyframes compare { from { opacity: 0; transform: translateY(6px); } }
+
+.tavolo-svuota, .tavolo-genera { position: absolute; z-index: 900; }
+.tavolo-svuota {
+  left: 12px;
+  bottom: 12px;
+  background: var(--base);
+  color: var(--ink-2);
+  box-shadow: var(--e1);
+}
+.tavolo-svuota[disabled] { opacity: 0; pointer-events: none; transform: scale(.6); }
+.tavolo-genera { right: 14px; bottom: 14px; }
+
+/* Sagome degli strati: solo mentre porti un capo dal cassetto */
+.zona {
+  position: absolute;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  border: 2px dashed rgba(0, 0, 0, .14);
+  border-radius: 14px;
+  color: var(--ink-2);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-stato) var(--ease), border-color var(--dur-stato) var(--ease), background-color var(--dur-stato) var(--ease);
+}
+.tavolo.mostra-zone .zona { opacity: .55; }
+.tavolo.mostra-zone .zona.accesa {
+  opacity: 1;
+  border-color: var(--accent);
+  background: rgba(210, 65, 58, .06);
+  color: var(--accent-text);
+}
+
+/* ───────── I capi ───────── */
+.pezzo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 50% 50%;
+  transition: transform .45s var(--molla);
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  will-change: transform;
+}
+.pezzo.sollevato { transition: transform 70ms linear; cursor: grabbing; }
+.pezzo-carta {
+  padding: 5px;
+  border-radius: 14px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1), 0 5px 14px rgba(0, 0, 0, .1);
+  transition: box-shadow .25s var(--ease);
+}
+.pezzo-carta img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 10px;
+  background: var(--photo-bg);
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+:is(.pezzo, .zona)[data-slot="scarpe"] .pezzo-carta img,
+:is(.pezzo, .zona)[data-slot="accessori"] .pezzo-carta img { aspect-ratio: 1; }
+.pezzo.senza-foto img { visibility: hidden; }
+.pezzo.sollevato .pezzo-carta { box-shadow: 0 4px 10px rgba(0, 0, 0, .1), 0 20px 40px rgba(0, 0, 0, .2); }
+.pezzo.selezionato .pezzo-carta { box-shadow: 0 0 0 2.5px var(--accent), 0 5px 14px rgba(0, 0, 0, .12); }
+
+.pezzo-lucchetto {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  display: none;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+}
+.pezzo.bloccato .pezzo-lucchetto { display: grid; animation: pop .34s var(--molla) both; }
+
+/* Il capo che porti su dal cassetto: segue il dito sopra a tutto */
+.pezzo.fantasma {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  transition: none;
+}
+
+/* Barretta del capo selezionato: lucchetto e togli */
+.attrezzi {
+  position: absolute;
+  z-index: 950;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+  transform: translate(-50%, -100%);
+  animation: attrezzi .26s var(--molla) both;
+}
+@keyframes attrezzi { from { opacity: 0; transform: translate(-50%, -100%) translateY(6px) scale(.85); } }
+.attrezzi button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: #FFFFFF;
+}
+.attrezzi button:active { background: rgba(255, 255, 255, .14); }
+.attrezzi button[aria-pressed="true"] { color: #FF8E86; }
+
+/* ───────── Il cassetto ───────── */
+.cassetto {
+  position: relative;
+  z-index: 1;
+  margin: 12px calc(-1 * max(var(--gutter), env(safe-area-inset-left))) 0;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  background: var(--base);
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, .05), 0 -8px 24px rgba(0, 0, 0, .06);
+}
+.cassetto .chips-riga { margin: 0; padding: 12px var(--gutter) 10px; }
+.cassetto .chip { min-height: 34px; padding: 0 14px; font-size: var(--t-xs); }
+.cassetto-lista {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 4px var(--gutter) 6px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+.cassetto-lista::-webkit-scrollbar { display: none; }
+.cassetto-lista li { flex: none; }
+.pezzo-cassetto {
+  position: relative;
+  display: block;
+  width: 74px;
+  height: 74px;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--photo-bg);
+  touch-action: pan-x;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: opacity var(--dur-stato) var(--ease), transform var(--dur-rilascio) var(--molla);
+}
+.pezzo-cassetto .foto { width: 100%; height: 100%; border-radius: 0; aspect-ratio: auto; }
+.pezzo-cassetto img { pointer-events: none; -webkit-user-drag: none; }
+.pezzo-cassetto[aria-pressed="true"] .foto { opacity: .45; }
+.pezzo-cassetto .spunta {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+}
+.pezzo-cassetto:active { transform: scale(.94); }
+
+/* Mentre trascini un capo del tavolo, il cassetto diventa il cestino */
+.cassetto-togli {
+  position: absolute;
+  inset: 8px var(--s3) calc(env(safe-area-inset-bottom) + 8px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  border: 2px dashed rgba(210, 65, 58, .45);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, .94);
+  color: var(--accent-text);
+  font-size: var(--t-sm);
+  font-weight: 650;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-stato) var(--ease), transform var(--dur-rilascio) var(--molla), background-color var(--dur-stato) var(--ease);
+}
+.cassetto.trascinando .cassetto-togli { opacity: 1; }
+.cassetto.pronto-a-togliere .cassetto-togli { border-style: solid; background: #FCEDEC; transform: scale(1.02); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pezzo, .pezzo.sollevato { transition: none; }
+}
+
+/* Cambiando filtro nel cassetto, i capi nuovi entrano invece di comparire di colpo */
+.cassetto-lista li[data-js-nuovo] { animation: entra-tessera .3s var(--morbido) both; }

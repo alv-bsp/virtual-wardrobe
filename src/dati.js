@@ -48,7 +48,7 @@ export async function caricaTutto() {
 export async function salvaCapo(bozza) {
   const userId = stato.sessione.user.id;
   const nuovo = !bozza.id;
-  const id = bozza.id || crypto.randomUUID();
+  const id = bozza.id || nuovoId();
   const precedente = nuovo ? null : stato.capi.find((c) => c.id === id);
 
   let percorsi = { foto: precedente?.foto ?? null, miniatura: precedente?.miniatura ?? null };
@@ -152,3 +152,13 @@ export async function eliminaOutfit(outfit) {
 }
 
 const senzaRete = (e) => !navigator.onLine || /fetch|network/i.test(e?.message || "");
+
+/** UUID v4. crypto.randomUUID c'è solo in HTTPS: in anteprima sul telefono (http://ip-del-mac) si ripiega su getRandomValues. */
+function nuovoId() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  b[6] = (b[6] & 0x0f) | 0x40;
+  b[8] = (b[8] & 0x3f) | 0x80;
+  const h = [...b].map((x) => x.toString(16).padStart(2, "0")).join("");
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+}

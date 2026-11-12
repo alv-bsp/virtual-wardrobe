@@ -11,6 +11,7 @@
 // - un campo con il fuoco tiene il suo valore
 // - un elemento aggiunto in un contenitore che c'era già riceve data-js-nuovo: il CSS può animarne
 //   l'ingresso (una tessera che compare dopo un filtro) senza far ripartire gli elementi rimasti
+// - i figli di un elemento con data-morph-ignora li gestisce qualcun altro (il tavolo degli outfit): non si toccano
 
 export function morph(radice, nuovoHtml) {
   const t = document.createElement("template");
@@ -80,6 +81,7 @@ function aggiornaNodo(a, b) {
     if (tag === "INPUT" && a.checked !== b.checked) a.checked = b.checked;
     if (tag !== "SELECT") return; // il testo di una textarea è il suo valore, già sistemato
   }
+  if (a.hasAttribute("data-morph-ignora")) return;
   aggiornaFigli(a, b);
 }
 
