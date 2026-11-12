@@ -6,10 +6,10 @@ import { SLOT, slotDi } from "../outfit.js";
 import { eliminaOutfit, impostaPreferito } from "../dati.js";
 import { sostituisci } from "../router.js";
 import { apriFoglio, chiudiFoglio, toast } from "../ui/avvisi.js";
-import { barra, vuoto, foto, collage, inOrdine, nomeOutfit, descriviOutfit } from "./comuni.js";
+import { barra, vuoto, foto, flatLay, inOrdine, nomeOutfit, descriviOutfit } from "./comuni.js";
 
 export const titolo = "Outfit";
-export const conTabbar = false; // come la scheda di un capo: foto in alto e barra di azioni
+export const conTabbar = false; // come la scheda di un capo: in alto l'outfit sul suo piano, poi i dettagli
 
 const nomeSlot = (c) => SLOT.find((s) => s.id === slotDi(c))?.nome || "";
 
@@ -27,8 +27,8 @@ export function render(s, { rotta, avviso = "" }) {
 
   return html`
     <article class="scheda">
-      <div class="eroe">
-        ${collage(capi)}
+      <div class="eroe eroe-piano">
+        ${flatLay(capi, { classe: "grande", link: true })}
         <a class="tondo-foto sinistra indietro" href="#/outfit" aria-label="Torna agli outfit">${icona("arrow-left", 20)}</a>
         <button class="tondo-foto destra" type="button" data-azione="preferito" data-id="${o.id}" aria-pressed="${o.preferito}"
           aria-label="${o.preferito ? "Togli dai preferiti" : "Aggiungi ai preferiti"}">${icona("heart", 19, 2)}</button>

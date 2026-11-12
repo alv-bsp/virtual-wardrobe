@@ -4,7 +4,7 @@
 export const movimentoRidotto = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // Elementi che "affondano" quando li tocchi. Lo stato sta in data-js-premuto, che il ridisegno non cancella.
-const PREMIBILI = ".btn, .chip, .icona-btn, .tab, .tasto-cta, .tondo-foto, .tessera, .tessera-outfit, .slot-scelta, .riga-outfit, .indietro, .link, .scelta-capo, .foto.vuota";
+const PREMIBILI = ".btn, .chip, .icona-btn, .tab, .tasto-cta, .tondo-foto, .tessera, .tessera-outfit, .slot-scelta, .riga-outfit, .indietro, .link, .scelta-capo, .foto.vuota, a.flatlay-carta";
 const DURATA_MINIMA = 120; // ms: anche un tocco velocissimo si vede
 
 /** Indirizzi delle foto già arrivate: ridisegnandole (es. tornando ad Armadio) si mostrano subito, senza dissolvenza. */

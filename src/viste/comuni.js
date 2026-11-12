@@ -4,6 +4,7 @@ import { hexColore, nomeVoce, nomeCapo } from "../voci.js";
 import { urlInCache } from "../foto.js";
 import { fotoArrivate } from "../ui/tocco.js";
 import { SLOT, slotDi } from "../outfit.js";
+import { disponi } from "../disposizione.js";
 
 /** Titolo della sezione con le impostazioni a destra. */
 export function testata(titolo, sotto = "") {
@@ -73,7 +74,6 @@ export function foto(percorso, { classe = "", alt = "" } = {}) {
 export const etichettaStato = (s) => (s === "armadio" ? "" : nomeVoce("stato", s));
 
 // ───────────────────────────── outfit
-const PRIORITA_COLLAGE = ["sotto", "scarpe", "giacca", "accessori"];
 
 /** Capi dell'outfit in ordine di strato, dall'alto in basso. */
 export function inOrdine(capi) {
@@ -81,15 +81,20 @@ export function inOrdine(capi) {
   return [...capi].sort((a, b) => pos(a) - pos(b));
 }
 
-/** Fino a quattro miniature: un capo sopra (maglia o sopra), sotto, scarpe, poi giacca e il resto. */
-export function collage(capi, classe = "") {
-  const perSlot = (id) => capi.filter((c) => slotDi(c) === id);
-  const sopra = [...perSlot("maglia"), ...perSlot("sopra")];
-  const ordinati = [sopra[0], ...PRIORITA_COLLAGE.flatMap(perSlot), ...sopra.slice(1)].filter(Boolean);
-  const quattro = ordinati.slice(0, 4);
+/**
+ * L'outfit come sul tavolo: capi in foto-adesivo su un piano a puntini, con la stessa disposizione del tavolo.
+ * Tutto in CSS (container query): il piano può essere grande come la scheda o piccolo come una riga.
+ * Con link, ogni carta apre il suo capo.
+ */
+export function flatLay(capi, { classe = "", link = false } = {}) {
   return html`
-    <div class="collage ${classe}" aria-hidden="true">
-      ${[0, 1, 2, 3].map((i) => (quattro[i] ? foto(quattro[i].miniatura) : html`<div class="foto vuoto-collage"></div>`))}
+    <div class="flatlay ${classe}" ${link ? "" : html`aria-hidden="true"`}>
+      ${disponi(capi).map(({ capo: c, strato, posa: p }, i) => {
+        const stile = `--x:${p.x.toFixed(3)};--y:${p.y.toFixed(3)};--w:${p.w};--r:${p.r.toFixed(1)}deg;--i:${i};z-index:${p.z}`;
+        return link
+          ? html`<a class="flatlay-carta" data-slot="${strato}" style="${stile}" href="#/capo/${c.id}" aria-label="${nomeCapo(c)}">${foto(c.miniatura)}</a>`
+          : html`<div class="flatlay-carta" data-slot="${strato}" style="${stile}">${foto(c.miniatura)}</div>`;
+      })}
     </div>`;
 }
 

@@ -39,11 +39,11 @@
 .icona-btn.blocco[data-js-premuto] { background: var(--grigio); box-shadow: var(--in1); }
 
 /* Contenuti piatti toccabili: si stringono appena */
-.tessera .foto, .tessera-outfit .collage, .scelta-capo .foto {
+.tessera .foto, .tessera-outfit .flatlay, .scelta-capo .foto {
   transition: transform var(--dur-rilascio) var(--molla);
 }
 :is(.tessera, .scelta-capo)[data-js-premuto] .foto,
-.tessera-outfit[data-js-premuto] .collage { transform: scale(.96); transition-duration: var(--dur-premi); }
+.tessera-outfit[data-js-premuto] .flatlay { transform: scale(.96); transition-duration: var(--dur-premi); }
 :is(.slot-scelta, .riga-outfit) { transition: opacity var(--dur-stato) var(--ease), transform var(--dur-rilascio) var(--molla); }
 :is(.slot-scelta, .riga-outfit)[data-js-premuto] { opacity: .6; transform: scale(.985); transition-duration: var(--dur-premi); }
 

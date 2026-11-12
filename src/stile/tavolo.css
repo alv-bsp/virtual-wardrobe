@@ -2,6 +2,12 @@
    Un piano grigio chiaro a puntini, incassato come un vassoio; sopra, i capi come foto-adesivo bianche che si
    sollevano quando le prendi. Sotto, il cassetto con tutto l'armadio. */
 
+:root {
+  --piano: #F6F6F6;
+  --puntini: radial-gradient(circle, rgba(0, 0, 0, .1) 1.1px, transparent 1.5px);
+  --piano-incasso: inset 0 0 0 1px rgba(0, 0, 0, .04), inset 0 2px 8px rgba(0, 0, 0, .06);
+}
+
 /* La pagina occupa lo schermo e non scorre: si scorre solo il cassetto, in orizzontale. */
 html:has(.vista-tavolo), body:has(.vista-tavolo) { overflow: hidden; overscroll-behavior: none; }
 .vista.vista-tavolo {
@@ -41,11 +47,11 @@ html:has(.vista-tavolo), body:has(.vista-tavolo) { overflow: hidden; overscroll-
   min-height: 0;
   margin: 0 calc(-1 * var(--s2));
   border-radius: var(--r-lg);
-  background-color: #F6F6F6;
-  background-image: radial-gradient(circle, rgba(0, 0, 0, .1) 1.1px, transparent 1.5px);
+  background-color: var(--piano);
+  background-image: var(--puntini);
   background-size: 22px 22px;
   background-position: 11px 11px;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04), inset 0 2px 8px rgba(0, 0, 0, .06);
+  box-shadow: var(--piano-incasso);
 }
 .tavolo {
   position: absolute;
@@ -276,8 +282,72 @@ html:has(.vista-tavolo), body:has(.vista-tavolo) { overflow: hidden; overscroll-
 .cassetto.trascinando .cassetto-togli { opacity: 1; }
 .cassetto.pronto-a-togliere .cassetto-togli { border-style: solid; background: #FCEDEC; transform: scale(1.02); }
 
+/* ───────── Lo stesso piano fuori dal tavolo: elenco, scheda dell'outfit, righe nella scheda di un capo ─────────
+   Misure in unità del contenitore: le carte crescono e si stringono con il piano, bordo e ombra compresi.
+   --lato è la larghezza della carta: la frazione --w dell'unità, che è la larghezza del piano
+   o, se il piano è basso, il 78% della sua altezza (come U nel tavolo). */
+.flatlay {
+  position: relative;
+  container-type: size;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: var(--piano);
+  background-image: var(--puntini);
+  background-size: 12px 12px;
+  background-position: 6px 6px;
+  box-shadow: var(--piano-incasso);
+}
+.flatlay-carta {
+  --lato: calc(var(--w) * min(100cqw, 78cqh));
+  position: absolute;
+  left: calc(var(--x) * 100%);
+  top: calc(var(--y) * 100%);
+  display: block;
+  width: var(--lato);
+  padding: calc(var(--lato) * .036);
+  border-radius: calc(var(--lato) * .1);
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1), 0 calc(var(--lato) * .035) calc(var(--lato) * .1) rgba(0, 0, 0, .1);
+  color: inherit;
+  transform: translate(-50%, -50%) rotate(var(--r));
+}
+.flatlay-carta .foto { aspect-ratio: 4 / 5; border-radius: calc(var(--lato) * .07); }
+.flatlay-carta:is([data-slot="scarpe"], [data-slot="accessori"]) .foto { aspect-ratio: 1; }
+.flatlay-carta .foto.senza svg { width: 45%; height: auto; }
+
+/* Nella scheda dell'outfit il piano è il protagonista, a tutta larghezza sotto la barra di stato.
+   Le carte atterrano una dopo l'altra e si toccano per aprire il capo. */
+.eroe.eroe-piano {
+  padding: calc(env(safe-area-inset-top) + 56px) 14px calc(var(--r-xl) + 14px);
+  background-color: var(--piano);
+  background-image: var(--puntini);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+}
+.flatlay.grande {
+  aspect-ratio: 5 / 6;
+  max-height: 52dvh;
+  overflow: visible;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.flatlay.grande .flatlay-carta { animation: atterra .5s var(--molla) both; animation-delay: calc(60ms + var(--i) * 55ms); }
+@keyframes atterra {
+  from { opacity: 0; transform: translate(-50%, -50%) translateY(16px) rotate(calc(var(--r) * -1.5)) scale(1.1); }
+  to { opacity: 1; transform: translate(-50%, -50%) translateY(0) rotate(var(--r)) scale(1); }
+}
+a.flatlay-carta { -webkit-touch-callout: none; transition: scale var(--dur-rilascio) var(--molla); }
+a.flatlay-carta[data-js-premuto] { scale: .94; transition-duration: var(--dur-premi); }
+
+/* Nelle righe "Outfit" della scheda di un capo */
+.flatlay.piccolo { flex: none; width: 56px; border-radius: var(--r-sm); background-size: 7px 7px; background-position: 3px 3px; }
+.flatlay.piccolo .foto.senza svg { display: none; }
+
 @media (prefers-reduced-motion: reduce) {
   .pezzo, .pezzo.sollevato { transition: none; }
+  .flatlay.grande .flatlay-carta { animation: none; }
 }
 
 /* Cambiando filtro nel cassetto, i capi nuovi entrano invece di comparire di colpo */

@@ -2,7 +2,7 @@ import { html } from "../ui/html.js";
 import { icona } from "../ui/icone.js";
 import { aggiorna, capiDiOutfit } from "../stato.js";
 import { voci } from "../voci.js";
-import { testata, vuoto, collage, nomeOutfit, descriviOutfit } from "./comuni.js";
+import { testata, vuoto, flatLay, nomeOutfit, descriviOutfit } from "./comuni.js";
 
 export const titolo = "Outfit";
 export const conTabbar = true;
@@ -57,7 +57,7 @@ function scheda(o, capi, i = 0) {
   return html`
     <li data-key="${o.id}" style="--n:${Math.min(i, 12)}">
       <a class="tessera-outfit" href="#/outfit/${o.id}">
-        ${collage(capi)}
+        ${flatLay(capi)}
         <span class="tessera-nome">${o.preferito ? html`<span class="cuore" aria-label="Preferito">${icona("heart", 13, 2.4)}</span>` : ""}${nomeOutfit(o, capi)}</span>
         <span class="tessera-meta">${descriviOutfit(o) || `${capi.length} capi`}</span>
       </a>

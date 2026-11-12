@@ -13,6 +13,7 @@ import { voci, nomeCapo } from "../voci.js";
 import { alterna } from "../filtri.js";
 import { SLOT, slotDi, genera, chiaveCapi, stagioneCorrente, slotDaCapi } from "../outfit.js";
 import { salvaOutfit } from "../dati.js";
+import { POSTI, posaPredefinita, unita } from "../disposizione.js";
 import { sostituisci } from "../router.js";
 import { apriFoglio, chiudiFoglio, toast } from "../ui/avvisi.js";
 import { urlFirmati, urlInCache } from "../foto.js";
@@ -22,17 +23,6 @@ import { barra, vuoto, foto } from "./comuni.js";
 export const conTabbar = false;
 export const classeVista = "vista-tavolo";
 
-// Dove cade ogni strato sul tavolo, come un flat lay: centro (frazioni di larghezza e altezza del tavolo),
-// larghezza (frazione dell'unità, vedi U), proporzioni della carta (altezza/larghezza) e livello.
-// Gli angoli in basso restano liberi per il cestino e il dado.
-const POSTI = {
-  giacca:    { x: .27, y: .27, w: .38, a: 1.25, z: 1 },
-  sopra:     { x: .60, y: .24, w: .38, a: 1.25, z: 3 },
-  maglia:    { x: .80, y: .41, w: .30, a: 1.25, z: 4 },
-  sotto:     { x: .50, y: .61, w: .34, a: 1.25, z: 2 },
-  scarpe:    { x: .40, y: .86, w: .28, a: 1, z: 5 },
-  accessori: { x: .16, y: .63, w: .22, a: 1, z: 6 },
-};
 const NOMI_CASSETTO = { giacca: "Giacche", maglia: "Maglie", sopra: "Sopra", sotto: "Sotto", scarpe: "Scarpe", accessori: "Accessori" };
 const limita = (v, a, b) => Math.min(b, Math.max(a, v));
 const casuale = (a, b) => a + Math.random() * (b - a);
@@ -216,15 +206,13 @@ class Tavolo {
   get W() { return this.el.clientWidth || 1; }
   get H() { return this.el.clientHeight || 1; }
   /** Unità delle misure dei capi: la larghezza, ma su un tavolo basso (iPhone piccoli, finestre larghe) si stringe. */
-  get U() { return Math.min(this.W, this.H * .78); }
+  get U() { return unita(this.W, this.H); }
 
   // ── pezzi
 
   posa(capoId, strato) {
-    if (!this.b.pose.has(capoId)) {
-      const p = POSTI[strato] || POSTI.accessori;
-      this.b.pose.set(capoId, { x: p.x + casuale(-.02, .02), y: p.y + casuale(-.015, .015), w: p.w, s: 1, r: casuale(-6, 6), z: p.z });
-    }
+    // Stessa posa di partenza della scheda dell'outfit: salvato o riaperto in Modifica, l'outfit ha lo stesso aspetto.
+    if (!this.b.pose.has(capoId)) this.b.pose.set(capoId, posaPredefinita(capoId, strato));
     return this.b.pose.get(capoId);
   }
 

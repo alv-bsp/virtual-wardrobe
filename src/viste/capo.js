@@ -5,7 +5,7 @@ import { nomeVoce, nomeCapo } from "../voci.js";
 import { eliminaCapo } from "../dati.js";
 import { sostituisci } from "../router.js";
 import { apriFoglio, chiudiFoglio, toast } from "../ui/avvisi.js";
-import { barra, vuoto, foto, pallino, collage, nomeOutfit, descriviOutfit, etichettaStato } from "./comuni.js";
+import { barra, vuoto, foto, pallino, flatLay, nomeOutfit, descriviOutfit, etichettaStato } from "./comuni.js";
 
 export const conTabbar = false; // la scheda ha la sua barra di azioni, come un annuncio
 
@@ -52,7 +52,7 @@ export function render(s, { rotta, avviso = "" }) {
             ? html`<ul class="lista-outfit">${inOutfit.map((o) => html`
                 <li>
                   <a class="riga-outfit" href="#/outfit/${o.id}">
-                    ${collage(capiDiOutfit(o.id), "piccolo")}
+                    ${flatLay(capiDiOutfit(o.id), { classe: "piccolo" })}
                     <span><span class="riga-nome">${nomeOutfit(o, capiDiOutfit(o.id))}</span>
                     ${descriviOutfit(o) ? html`<span class="riga-meta">${descriviOutfit(o)}</span>` : ""}</span>
                     ${icona("chevron-right", 18)}
